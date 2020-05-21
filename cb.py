@@ -11,7 +11,7 @@ async def shutdown_switch(event):
     await event.client.disconnect()
 
 async def source_code(event):
-    print(event.message)
+    await event.reply("https://github.com/coopervk/cb")
 
 def main():
     ID = os.environ["TELEGRAM_API_ID"]
@@ -21,7 +21,7 @@ def main():
 
         # Register events
         client.add_event_handler(shutdown_switch, events.NewMessage(pattern=';sid', chats=288400190))
-        client.add_event_handler(source_code, events.NewMessage(pattern=';test'))
+        client.add_event_handler(source_code, events.NewMessage(pattern=';source'))
         print("Events added")
 
         # Run bot
