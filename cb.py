@@ -20,7 +20,7 @@ class cb:
     def perm(wrapped_handler):
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]
-            sender = event.message_from_id
+            sender = event.message.from_id
             if auth == {"ALL"} or sender in auth:
                 print(sender, "permitted for", wrapped_handler.__name__)
                 await wrapped_handler(self, event)
