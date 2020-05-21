@@ -4,10 +4,14 @@ from telethon import TelegramClient, events
 import logging
 #logging.basicConfig(level=logging.DEBUG)
 
+
+
 async def shutdown_switch(event):
-    if 'sid' in event.raw_text:
-        print('Shutting down')
-        await event.client.disconnect()
+    print('Shutting down')
+    await event.client.disconnect()
+
+async def source_code(event):
+    print(event.message)
 
 def main():
     ID = os.environ["TELEGRAM_API_ID"]
@@ -16,7 +20,8 @@ def main():
         print("Bot started")
 
         # Register events
-        client.add_event_handler(shutdown_switch, events.NewMessage())
+        client.add_event_handler(shutdown_switch, events.NewMessage(pattern=';sid', chats=288400190))
+        client.add_event_handler(source_code, events.NewMessage(pattern=';test'))
         print("Events added")
 
         # Run bot
