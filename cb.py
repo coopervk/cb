@@ -21,12 +21,12 @@ class cb:
         print("permission check")
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]
-            print(auth, "vs", event.message.from_id)
-            if auth == {"ALL"} or event.message.from_id in auth:
-                print("permitted")
+            sender = event.message_from_id
+            if auth == {"ALL"} or sender in auth:
+                print(sender, "permitted for", wrapped_handler.__name__)
                 await wrapped_handler(self, event)
             else:
-                print("denied")
+                print(sender, "denied for", wrapped_handler.__name__)
         return handler
 
     @perm
