@@ -18,7 +18,6 @@ class cb:
         print("Bot started")
 
     def perm(wrapped_handler):
-        print("permission check")
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]
             sender = event.message_from_id
