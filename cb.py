@@ -5,7 +5,6 @@ import logging
 #logging.basicConfig(level=logging.DEBUG)
 
 async def shutdown_switch(event):
-    print("Message received:", event.raw_text)
     if 'sid' in event.raw_text:
         print('Shutting down')
         await event.client.disconnect()
