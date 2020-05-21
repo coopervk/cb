@@ -4,16 +4,29 @@ from telethon import TelegramClient, events
 import logging
 #logging.basicConfig(level=logging.DEBUG)
 
+perms = {}
 
+def perm(wrapped_handler):
+    async def handler(event):
+        auth = perms[wrapped_handler.__name__]
+        if auth == {"ALL"} or event.message.from_id in auth:
+            await wrapped_handler(event)
+    return handler
 
+@perm
 async def shutdown_switch(event):
     print('Shutting down')
     await event.client.disconnect()
 
+@perm
 async def source_code(event):
     await event.reply("https://github.com/coopervk/cb")
 
 def main():
+    # Permissions
+    perms["shutdown_switch"] = {os.environ["TELEGRAM_OWNER_ID"]}
+    perms["source_code"] = {"ALL"}
+
     ID = os.environ["TELEGRAM_API_ID"]
     hs = os.environ["TELEGRAM_API_HASH"]
     with TelegramClient('gdynamics', ID, hs) as client:
