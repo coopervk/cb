@@ -10,6 +10,7 @@ class cb:
         self.owner = int(os.environ["TELEGRAM_OWNER_ID"])
         self.control_channel = 288400190
         self.perms =    {
+                            "set_header":       {self.owner},
                             "shutdown_switch":  {self.owner},
                             "source_code":      {"ALL"},
                             "picture_scrape":   {self.owner},
@@ -38,6 +39,15 @@ class cb:
 
     async def fmt_reply(self, event, msg):
         await event.reply(self.header + '\n' + msg)
+
+    @perm
+    async def set_header(self, event):
+        cmd = event.message.text.split(' ')
+        if(len(cmd) < 2):
+            await self.fmt_reply(event, "Improper format for set_header!")
+            return
+        self.header = ' '.join(cmd[1:])
+        await self.fmt_reply(event, "New header set")
 
     @perm
     async def shutdown_switch(self, event):
@@ -71,6 +81,7 @@ class cb:
             self.client.add_event_handler(self.shutdown_switch, events.NewMessage(pattern=';sid', chats=self.control_channel))
             self.client.add_event_handler(self.source_code, events.NewMessage(pattern=';source'))
             self.client.add_event_handler(self.picture_scrape, events.NewMessage(pattern=';pscrape'))
+            self.client.add_event_handler(self.set_header, events.NewMessage(pattern=';set_header'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
