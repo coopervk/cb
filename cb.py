@@ -1,17 +1,21 @@
 import asyncio
 import os
-from telethon import TelegramClient, events
+from telethon import TelegramClient, events, tl
 import logging
 logging.basicConfig(level=logging.INFO)
 
 class cb:
     def __init__(self):
         # Permissions
+        self.owner = int(os.environ["TELEGRAM_OWNER_ID"])
+        self.control_channel = 288400190
         self.perms =    {
-                            "shutdown_switch":  {int(os.environ["TELEGRAM_OWNER_ID"])},
-                            "source_code":      {"ALL"}
+                            "shutdown_switch":  {self.owner},
+                            "source_code":      {"ALL"},
+                            "picture_scrape":   {self.owner},
                         }
 
+        # Start
         ID = os.environ["TELEGRAM_API_ID"]
         hs = os.environ["TELEGRAM_API_HASH"]
         self.client = TelegramClient('gdynamics', ID, hs)
@@ -25,6 +29,7 @@ class cb:
                 print(sender, "permitted for", wrapped_handler.__name__)
                 await wrapped_handler(self, event)
             else:
+                print(event)
                 print(sender, "denied for", wrapped_handler.__name__)
         return handler
 
@@ -38,6 +43,18 @@ class cb:
         print("source_code")
         await event.reply("https://github.com/coopervk/cb")
 
+    @perm
+    async def picture_scrape(self, event):
+        print("picture_scrape", end=' ')
+        cmd = event.message.raw_text.split(' ')
+        if(len(cmd) != 2):
+            await event.reply("Improper format for picture_scrape!")
+            return
+        chat = int(cmd[1])
+        print(chat)
+        async for image in self.client.iter_messages(chat, filter=tl.types.InputMessagesFilterPhotos):
+            print(image.id)
+
     async def literally_everything(self, event):
         print("DEBUG:", event)
 
@@ -45,8 +62,9 @@ class cb:
         with self.client:
             # Register events
             print("Adding events")
-            self.client.add_event_handler(self.shutdown_switch, events.NewMessage(pattern=';sid', chats=288400190))
+            self.client.add_event_handler(self.shutdown_switch, events.NewMessage(pattern=';sid', chats=self.control_channel))
             self.client.add_event_handler(self.source_code, events.NewMessage(pattern=';source'))
+            self.client.add_event_handler(self.picture_scrape, events.NewMessage(pattern=';pscrape'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
