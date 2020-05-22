@@ -34,15 +34,15 @@ class cb:
             auth = self.perms[wrapped_handler.__name__]
             sender = event.message.from_id
             if auth == {"ALL"} or sender in auth:
-                print(sender, "permitted for", wrapped_handler.__name__)
+                self.bot_log(str(sender) + " permitted for " + wrapped_handler.__name__)
                 await wrapped_handler(self, event)
             else:
-                print(event)
-                print(sender, "denied for", wrapped_handler.__name__)
+                self.bot_log(str(sender) + " denied for " + wrapped_handler.__name__)
         return handler
 
     def bot_log(self, log):
         self.bot_log_file.write(datetime.datetime.now().isoformat() + " --> " + log + '\n')
+        self.bot_log_file.flush()
 
     async def fmt_reply(self, event, msg):
         await event.reply(self.header + '\n' + msg)
@@ -75,7 +75,7 @@ class cb:
             return
         chat = int(cmd[1])
 
-        print("picture_scrape", chat)
+        self.bot_log("picture_scrape " + str(chat))
         async for image in self.client.iter_messages(chat, filter=tl.types.InputMessagesFilterPhotos):
             print(image.id)
 
@@ -83,6 +83,8 @@ class cb:
         print("DEBUG:", event)
 
     def run(self):
+        self.bot_log("Started bot")
+
         with self.client:
             # Register events
             print("Adding events")
