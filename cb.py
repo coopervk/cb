@@ -15,6 +15,9 @@ class cb:
                             "picture_scrape":   {self.owner},
                         }
 
+        # Default message reply header
+        self.header = "`CoopBoop`"
+
         # Start
         ID = os.environ["TELEGRAM_API_ID"]
         hs = os.environ["TELEGRAM_API_HASH"]
@@ -33,6 +36,9 @@ class cb:
                 print(sender, "denied for", wrapped_handler.__name__)
         return handler
 
+    async def fmt_reply(self, event, msg):
+        await event.reply(self.header + '\n' + msg)
+
     @perm
     async def shutdown_switch(self, event):
         print('Shutting down')
@@ -41,17 +47,17 @@ class cb:
     @perm
     async def source_code(self, event):
         print("source_code")
-        await event.reply("https://github.com/coopervk/cb")
+        await self.fmt_reply(event, "https://github.com/coopervk/cb")
 
     @perm
     async def picture_scrape(self, event):
-        print("picture_scrape", end=' ')
         cmd = event.message.raw_text.split(' ')
         if(len(cmd) != 2):
-            await event.reply("Improper format for picture_scrape!")
+            await self.fmt_reply(event, "Improper format for picture_scrape!")
             return
         chat = int(cmd[1])
-        print(chat)
+
+        print("picture_scrape", chat)
         async for image in self.client.iter_messages(chat, filter=tl.types.InputMessagesFilterPhotos):
             print(image.id)
 
