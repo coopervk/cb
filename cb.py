@@ -1,6 +1,7 @@
 import asyncio
 import os
 from telethon import TelegramClient, events, tl
+import datetime
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -18,6 +19,9 @@ class cb:
 
         # Default message reply header
         self.header = "`CoopBoop`"
+
+        # Set file to log bot activity to
+        self.bot_log_file = open("./bot_log.txt", 'a')
 
         # Start
         ID = os.environ["TELEGRAM_API_ID"]
@@ -37,6 +41,9 @@ class cb:
                 print(sender, "denied for", wrapped_handler.__name__)
         return handler
 
+    def bot_log(self, log):
+        self.bot_log_file.write(datetime.datetime.now().isoformat() + " --> " + log + '\n')
+
     async def fmt_reply(self, event, msg):
         await event.reply(self.header + '\n' + msg)
 
@@ -48,15 +55,16 @@ class cb:
             return
         self.header = ' '.join(cmd[1:])
         await self.fmt_reply(event, "New header set")
+        self.bot_log("header set to " + self.header)
 
     @perm
     async def shutdown_switch(self, event):
-        print('Shutting down')
+        self.bot_log("Shutting down")
+        self.bot_log_file.close()
         await event.client.disconnect()
 
     @perm
     async def source_code(self, event):
-        print("source_code")
         await self.fmt_reply(event, "https://github.com/coopervk/cb")
 
     @perm
