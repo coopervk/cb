@@ -23,6 +23,9 @@ class cb:
         # Set file to log bot activity to
         self.bot_log_file = open("./bot_log.txt", 'a')
 
+        # File download location
+        self.file_download_path = "./tmp"
+
         # Start
         ID = os.environ["TELEGRAM_API_ID"]
         hs = os.environ["TELEGRAM_API_HASH"]
@@ -71,13 +74,13 @@ class cb:
     async def picture_scrape(self, event):
         cmd = event.message.raw_text.split(' ')
         if(len(cmd) != 2):
-            await self.fmt_reply(event, "Improper format for picture_scrape!")
-            return
-        chat = int(cmd[1])
+            chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else event.to_id.user_id
+        else:
+            chat = int(cmd[1])
 
         self.bot_log("picture_scrape " + str(chat))
         async for image in self.client.iter_messages(chat, filter=tl.types.InputMessagesFilterPhotos):
-            print(image.id)
+            await event.download_media(self.file_download_path)
 
     async def literally_everything(self, event):
         print("DEBUG:", event)
