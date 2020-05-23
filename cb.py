@@ -80,7 +80,8 @@ class cb:
 
         self.bot_log("picture_scrape " + str(chat))
         async for image in self.client.iter_messages(chat, filter=tl.types.InputMessagesFilterPhotos):
-            await event.download_media(self.file_download_path)
+            print(image)
+            await event.download_media(file=self.file_download_path)
 
     async def literally_everything(self, event):
         print("DEBUG:", event)
