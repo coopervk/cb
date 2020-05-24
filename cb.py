@@ -1,7 +1,7 @@
 import asyncio
 import os
 from telethon import TelegramClient, events, tl
-import datetime
+from datetime import datetime
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -44,7 +44,7 @@ class cb:
         return handler
 
     def bot_log(self, log):
-        self.bot_log_file.write(datetime.datetime.now().isoformat() + " --> " + log + '\n')
+        self.bot_log_file.write(datetime.now().isoformat() + " --> " + log + '\n')
         self.bot_log_file.flush()
 
     async def fmt_reply(self, event, msg):
@@ -79,8 +79,19 @@ class cb:
             chat = int(cmd[1])
 
         self.bot_log("picture_scrape " + str(chat))
-        async for message in self.client.iter_messages(chat, filter=tl.types.InputMessagesFilterPhotos):
-            await message.download_media(self.file_download_path)
+        cnt = 0
+        before = datetime.now()
+        async for message in self.client.iter_messages(chat):
+            if message.media is not None:
+                await message.download_media(self.file_download_path)
+                cnt += 1
+        after = datetime.now()
+        diff = (after - before).total_seconds()
+        secs = str(int(diff % 60))
+        mins = str(int(diff / 60))
+        hrrs = str(int(diff / 3600))
+        elap = hrrs + ":" + mins + ":" + secs
+        await self.fmt_reply(message, elap + ", saved until this point.")
 
     async def literally_everything(self, event):
         print("DEBUG:", event)
