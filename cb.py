@@ -14,7 +14,8 @@ class cb:
                             "set_header":       {self.owner},
                             "shutdown_switch":  {self.owner},
                             "source_code":      {"ALL"},
-                            "scrape":   {self.owner},
+                            "scrape":           {self.owner},
+                            "id_of":            {self.owner},
                         }
 
         # Default message reply header
@@ -93,6 +94,36 @@ class cb:
         elap = hrrs + ":" + mins + ":" + secs
         await self.fmt_reply(message, elap + ", saved until this point.")
 
+    @perm
+    async def id_of(self, event):
+        cmd = event.message.raw_text.split(' ')
+        if(len(cmd) < 2):
+            await self.fmt_reply(event, "Improper syntax for ;idof! Need a name!")
+            return
+
+        name_arg = ' '.join(cmd[1:])
+        name_pot = {}
+        dialogs = await self.client.get_dialogs()
+        for dialog in dialogs:
+            entity = dialog.entity
+            if type(entity) is tl.types.User:
+                if not entity.deleted:
+                    name_dlg = entity.first_name
+                    name_dlg += ' ' + entity.last_name if entity.last_name else ''
+                    name_dlg += '(@' + entity.username + ')' if entity.username else ''
+            else:
+                name_dlg = entity.title
+            if name_arg.lower() in name_dlg.lower():
+                name_pot[name_dlg] = entity.id
+
+        if len(name_pot) == 0:
+            await self.fmt_reply(event, "No matches found for " + name_arg)
+        else:
+            answer = ""
+            for name, ID in name_pot.items():
+                answer += "> " + name + " --> `" + str(ID) + "`" + '\n'
+            await self.fmt_reply(event, answer)
+
     async def literally_everything(self, event):
         print("DEBUG:", event)
 
@@ -106,6 +137,7 @@ class cb:
             self.client.add_event_handler(self.source_code, events.NewMessage(pattern=';source'))
             self.client.add_event_handler(self.scrape, events.NewMessage(pattern=';scrape'))
             self.client.add_event_handler(self.set_header, events.NewMessage(pattern=';set_header'))
+            self.client.add_event_handler(self.id_of, events.NewMessage(pattern=';idof'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
