@@ -55,7 +55,7 @@ class cb:
     async def set_header(self, event):
         cmd = event.message.text.split(' ')
         if(len(cmd) < 2):
-            await self.fmt_reply(event, "Improper format for set_header!")
+            await self.fmt_reply(event, "Improper syntax for set_header!")
             return
         self.header = ' '.join(cmd[1:])
         await self.fmt_reply(event, "New header set")
