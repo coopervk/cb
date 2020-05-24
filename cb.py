@@ -134,7 +134,7 @@ class cb:
             # Register events
             print("Adding events")
             self.client.add_event_handler(self.shutdown_switch, events.NewMessage(pattern=';sid', chats=self.control_channel))
-            self.client.add_event_handler(self.source_code, events.NewMessage(pattern=';source'))
+            self.client.add_event_handler(self.source_code, events.NewMessage(pattern=';src'))
             self.client.add_event_handler(self.scrape, events.NewMessage(pattern=';scrape'))
             self.client.add_event_handler(self.set_header, events.NewMessage(pattern=';hdr'))
             self.client.add_event_handler(self.id_of, events.NewMessage(pattern=';idof'))
