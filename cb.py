@@ -14,7 +14,7 @@ class cb:
                             "set_header":       {self.owner},
                             "shutdown_switch":  {self.owner},
                             "source_code":      {"ALL"},
-                            "picture_scrape":   {self.owner},
+                            "scrape":   {self.owner},
                         }
 
         # Default message reply header
@@ -71,14 +71,14 @@ class cb:
         await self.fmt_reply(event, "https://github.com/coopervk/cb")
 
     @perm
-    async def picture_scrape(self, event):
+    async def scrape(self, event):
         cmd = event.message.raw_text.split(' ')
         if(len(cmd) != 2):
             chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else event.to_id.user_id
         else:
             chat = int(cmd[1])
 
-        self.bot_log("picture_scrape " + str(chat))
+        self.bot_log("scrape " + str(chat))
         cnt = 0
         before = datetime.now()
         async for message in self.client.iter_messages(chat):
@@ -104,7 +104,7 @@ class cb:
             print("Adding events")
             self.client.add_event_handler(self.shutdown_switch, events.NewMessage(pattern=';sid', chats=self.control_channel))
             self.client.add_event_handler(self.source_code, events.NewMessage(pattern=';source'))
-            self.client.add_event_handler(self.picture_scrape, events.NewMessage(pattern=';pscrape'))
+            self.client.add_event_handler(self.scrape, events.NewMessage(pattern=';scrape'))
             self.client.add_event_handler(self.set_header, events.NewMessage(pattern=';set_header'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
