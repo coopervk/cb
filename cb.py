@@ -74,7 +74,6 @@ class cb:
         dt = datetime.strptime(time, fmt)
         return dt
 
-
     async def fmt_reply(self, event, msg):
         msg = self.header + '\n' + msg
         for i in range(0, len(msg), 4096):
@@ -149,20 +148,39 @@ class cb:
     @perm
     async def activity(self, event):
         cmd = event.message.raw_text.split(' ')
-        chat = None
-        if len(cmd) > 1:
-            choice = cmd[1]
-        if(len(cmd) == 2):
-            if type(event.to_id) is tl.types.PeerChat:
-                chat = event.to_id.chat_id
-            elif type(event.to_id) is tl.types.PeerChannel:
-                chat = event.to_id.channel_id
-        elif(len(cmd) == 3):
-            chat = int(cmd[2])
 
-        if chat is None:
-            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
-            return
+        switch(len(cmd)) {
+                default:
+                    await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
+                    return
+                case 2:
+                    choice = cmd[1].lower()
+                    time = None
+                    if type(event.to_id) is tl.types.PeerChat:
+                        chat = event.to_id.chat_id
+                    elif type(event.to_id) is tl.types.PeerChannel:
+                        chat = event.to_id.channel_id
+                    break
+                case 3:
+                    choice = cmd[1]
+                    if cmd[2].lower() != "none":
+                        dt = self.str_to_datetime(cmd[2])
+                    else
+                        dt = None
+                    if type(event.to_id) is tl.types.PeerChat:
+                        chat = event.to_id.chat_id
+                    elif type(event.to_id) is tl.types.PeerChannel:
+                        chat = event.to_id.channel_id
+                    break
+                case 4:
+                    choice = cmd[1]
+                    if cmd[2].lower() != "none":
+                        dt = self.str_to_datetime(cmd[2])
+                    else
+                        dt = None
+                    chat = int(cmd[3])
+                    break
+        }
 
         members = {}
         async for member in self.client.iter_participants(chat):
