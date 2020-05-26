@@ -183,10 +183,10 @@ class cb:
         sorted_members = members.values()
         sorted_members = sorted(sorted_members, key=lambda l:l[1], reverse=choice == 'a')
 
-        choice = "active" if choice=='a' else "inactive"
-        results = "The 10 most " + choice + " users"
+        choice = "most" if choice=='a' else "least"
+        results = "The 10 " + choice + " active users"
         if dt:
-            results += " as of " + self.datetime_to_str(dt)
+            results += " since " + self.datetime_to_str(dt)
         results += " are:\n"
         for i in range(min(len(sorted_members),10)):
             print(i)
