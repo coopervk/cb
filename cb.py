@@ -124,6 +124,21 @@ class cb:
                 answer += "> " + name + " --> `" + str(ID) + "`" + '\n'
             await self.fmt_reply(event, answer)
 
+    @perm
+    async def activity(self, event):
+        cmd = event.message.raw_text.split(' ')
+        if(len(cmd) == 2):
+            chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else event.to_id.user_id
+        elif(len(cmd) == 3):
+            chat = int(cmd[2])
+        else:
+            await self.fmt_reply(event "Improper syntax for ;activity! Need a type! (active, inactive)")
+        choice = cmd[1]
+
+        members = {}
+        async for member in self.client.iter_participants:
+            print(member)
+
     async def literally_everything(self, event):
         print("DEBUG:", event)
 
