@@ -67,6 +67,14 @@ class cb:
         self.bot_log_file.write(datetime.now().isoformat() + " --> " + log + '\n')
         self.bot_log_file.flush()
 
+    def str_to_datetime(self, time):
+        fmt = "%Y-%m-%d"
+        if ':' in time:
+            fmt += " %H:%M:%S"
+        dt = datetime.strptime(time, fmt)
+        return dt
+
+
     async def fmt_reply(self, event, msg):
         msg = self.header + '\n' + msg
         for i in range(0, len(msg), 4096):
@@ -158,7 +166,8 @@ class cb:
 
         members = {}
         async for member in self.client.iter_participants(chat):
-            print(member)
+            members[self.name(member)] = 0
+        print(members)
 
     async def literally_everything(self, event):
         print("DEBUG:", event)
