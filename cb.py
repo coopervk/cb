@@ -127,13 +127,19 @@ class cb:
     @perm
     async def activity(self, event):
         cmd = event.message.raw_text.split(' ')
+        chat = None
         if(len(cmd) == 2):
-            chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else event.to_id.user_id
+            chat = event.to_id.chat_id
         elif(len(cmd) == 3):
             chat = int(cmd[2])
-        else:
-            await self.fmt_reply(event "Improper syntax for ;activity! Need a type! (active, inactive)")
         choice = cmd[1]
+
+        if chat is None:
+            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
+            return
+        elif type(async self.client.get_entity(chat)) is tl.types.PeerUser:
+            await self.fmt_reply(event, "A PeerUser was given as the ID! Please give a channel or chat ID!")
+            return
 
         members = {}
         async for member in self.client.iter_participants:
