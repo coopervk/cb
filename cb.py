@@ -16,6 +16,7 @@ class cb:
                             "source_code":      {"ALL"},
                             "scrape":           {self.owner},
                             "id_of":            {self.owner},
+                            "activity":         {self.owner},
                         }
 
         # Default message reply header
@@ -137,12 +138,12 @@ class cb:
         if chat is None:
             await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
             return
-        elif type(async self.client.get_entity(chat)) is tl.types.PeerUser:
+        elif type(await self.client.get_entity(chat)) is tl.types.PeerUser:
             await self.fmt_reply(event, "A PeerUser was given as the ID! Please give a channel or chat ID!")
             return
 
         members = {}
-        async for member in self.client.iter_participants:
+        async for member in self.client.iter_participants(chat):
             print(member)
 
     async def literally_everything(self, event):
@@ -159,6 +160,7 @@ class cb:
             self.client.add_event_handler(self.scrape, events.NewMessage(pattern=';scrape'))
             self.client.add_event_handler(self.set_header, events.NewMessage(pattern=';hdr'))
             self.client.add_event_handler(self.id_of, events.NewMessage(pattern=';idof'))
+            self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
