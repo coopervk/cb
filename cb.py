@@ -151,7 +151,7 @@ class cb:
         cmd_len = len(cmd)
 
         if cmd_len > 1:
-            choice = cmd[1].lower()
+            choice = cmd[1][0].lower()
             dt = None
             if type(event.to_id) is tl.types.PeerChat:
                 chat = event.to_id.chat_id
