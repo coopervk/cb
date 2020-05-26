@@ -170,8 +170,17 @@ class cb:
 
         members = {}
         async for member in self.client.iter_participants(chat):
-            members[self.name(member)] = 0
-        print(members)
+            members[member.id] = [self.name(member), 0]
+
+        async for msg in self.client.iter_messages(chat, offset_date=dt, reverse=(dt is not None)):
+            print(msg, end='\n\n')
+            if msg.from_id in members:
+                members[msg.from_id][1] += 1
+
+        sorted_members = members.values()
+        sorted_members = sorted(sorted_members, key=lambda l:l[1], reverse=choice == 'a')
+
+        print(sorted_members)
 
     async def literally_everything(self, event):
         print("DEBUG:", event)
