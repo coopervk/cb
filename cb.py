@@ -148,39 +148,25 @@ class cb:
     @perm
     async def activity(self, event):
         cmd = event.message.raw_text.split(' ')
+        cmd_len = len(cmd)
 
-        switch(len(cmd)) {
-                default:
-                    await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
-                    return
-                case 2:
-                    choice = cmd[1].lower()
-                    time = None
-                    if type(event.to_id) is tl.types.PeerChat:
-                        chat = event.to_id.chat_id
-                    elif type(event.to_id) is tl.types.PeerChannel:
-                        chat = event.to_id.channel_id
-                    break
-                case 3:
-                    choice = cmd[1]
-                    if cmd[2].lower() != "none":
-                        dt = self.str_to_datetime(cmd[2])
-                    else
-                        dt = None
-                    if type(event.to_id) is tl.types.PeerChat:
-                        chat = event.to_id.chat_id
-                    elif type(event.to_id) is tl.types.PeerChannel:
-                        chat = event.to_id.channel_id
-                    break
-                case 4:
-                    choice = cmd[1]
-                    if cmd[2].lower() != "none":
-                        dt = self.str_to_datetime(cmd[2])
-                    else
-                        dt = None
-                    chat = int(cmd[3])
-                    break
-        }
+        if cmd_len > 1:
+            choice = cmd[1].lower()
+            dt = None
+            if type(event.to_id) is tl.types.PeerChat:
+                chat = event.to_id.chat_id
+            elif type(event.to_id) is tl.types.PeerChannel:
+                chat = event.to_id.channel_id
+        if cmd_len > 2:
+            if cmd[2].lower() != "none":
+                dt = self.str_to_datetime(cmd[2])
+            else
+                dt = None
+        if cmd_len > 3:
+            chat = int(cmd[3])
+        if cmd_len < 2 or cmd_len > 4:
+            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
+            return
 
         members = {}
         async for member in self.client.iter_participants(chat):
