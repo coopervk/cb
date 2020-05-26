@@ -160,7 +160,7 @@ class cb:
         if cmd_len > 2:
             if cmd[2].lower() != "none":
                 dt = self.str_to_datetime(cmd[2])
-            else
+            else:
                 dt = None
         if cmd_len > 3:
             chat = int(cmd[3])
