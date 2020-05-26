@@ -176,7 +176,6 @@ class cb:
             members[member.id] = [self.name(member), 0]
 
         async for msg in self.client.iter_messages(chat, offset_date=dt, reverse=(dt is not None)):
-            print(msg, end='\n\n')
             if msg.from_id in members:
                 members[msg.from_id][1] += 1
 
@@ -189,7 +188,6 @@ class cb:
             results += " since " + self.datetime_to_str(dt)
         results += " are:\n"
         for i in range(min(len(sorted_members),10)):
-            print(i)
             results += "> " + sorted_members[i][0] + " --> " + str(sorted_members[i][1]) + '\n'
 
         await self.fmt_reply(event, results)
