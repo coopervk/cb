@@ -129,7 +129,8 @@ class cb:
     async def activity(self, event):
         cmd = event.message.raw_text.split(' ')
         chat = None
-        choice = cmd[1] if len(cmd) > 1
+        if len(cmd) > 1:
+            choice = cmd[1]
         if(len(cmd) == 2):
             if type(event.to_id) is tl.types.PeerChat:
                 chat = event.to_id.chat_id
