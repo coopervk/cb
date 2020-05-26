@@ -188,7 +188,7 @@ class cb:
             results += " since " + self.datetime_to_str(dt)
         results += " are:\n"
         for i in range(min(len(sorted_members),10)):
-            results += "> " + sorted_members[i][0] + " --> " + str(sorted_members[i][1]) + '\n'
+            results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + " --> " + str(sorted_members[i][1]) + '\n'
 
         await self.fmt_reply(event, results)
 
