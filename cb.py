@@ -45,6 +45,24 @@ class cb:
                 self.bot_log(str(sender) + " denied for " + wrapped_handler.__name__)
         return handler
 
+    def name(self, entity, at=False):
+        if at:
+            at = '@'
+        else:
+            at = ''
+
+        if type(entity) is tl.types.User:
+            if not entity.deleted:
+                name = entity.first_name
+                name += ' ' + entity.last_name if entity.last_name else ''
+                name += '(' + at + entity.username + ')' if entity.username else ''
+            else:
+                name = "<Deleted Account>"
+        else:
+            name = entity.title
+
+        return name
+
     def bot_log(self, log):
         self.bot_log_file.write(datetime.now().isoformat() + " --> " + log + '\n')
         self.bot_log_file.flush()
@@ -106,16 +124,9 @@ class cb:
         name_pot = {}
         dialogs = await self.client.get_dialogs()
         for dialog in dialogs:
-            entity = dialog.entity
-            if type(entity) is tl.types.User:
-                if not entity.deleted:
-                    name_dlg = entity.first_name
-                    name_dlg += ' ' + entity.last_name if entity.last_name else ''
-                    name_dlg += '(@' + entity.username + ')' if entity.username else ''
-            else:
-                name_dlg = entity.title
+            name_dlg = self.name(dialog.entity)
             if name_arg.lower() in name_dlg.lower():
-                name_pot[name_dlg] = entity.id
+                name_pot[name_dlg] = dialog.entity.id
 
         if len(name_pot) == 0:
             await self.fmt_reply(event, "No matches found for " + name_arg)
