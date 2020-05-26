@@ -70,9 +70,12 @@ class cb:
     def str_to_datetime(self, time):
         fmt = "%Y-%m-%d"
         if ':' in time:
-            fmt += " %H:%M:%S"
+            fmt += "T%H:%M:%S"
         dt = datetime.strptime(time, fmt)
         return dt
+
+    def datetime_to_str(self, dt):
+        return datetime.strftime(dt, "%Y-%m-%dT%H:%M:%S")
 
     async def fmt_reply(self, event, msg):
         msg = self.header + '\n' + msg
@@ -180,7 +183,16 @@ class cb:
         sorted_members = members.values()
         sorted_members = sorted(sorted_members, key=lambda l:l[1], reverse=choice == 'a')
 
-        print(sorted_members)
+        choice = "active" if choice=='a' else "inactive"
+        results = "The 10 most " + choice + " users"
+        if dt:
+            results += " as of " + self.datetime_to_str(dt)
+        results += " are:\n"
+        for i in range(min(len(sorted_members),10)):
+            print(i)
+            results += "> " + sorted_members[i][0] + " --> " + str(sorted_members[i][1]) + '\n'
+
+        await self.fmt_reply(event, results)
 
     async def literally_everything(self, event):
         print("DEBUG:", event)
