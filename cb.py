@@ -68,7 +68,11 @@ class cb:
         self.bot_log_file.flush()
 
     async def fmt_reply(self, event, msg):
-        await event.reply(self.header + '\n' + msg)
+        msg = self.header + '\n' + msg
+        print(len(msg))
+        for i in range(0, len(msg), 4096):
+            print(i, i+4096)
+            await event.reply(msg[i:i+4096])
 
     @perm
     async def set_header(self, event):
