@@ -92,7 +92,7 @@ class cb:
         mins = str(int(diff / 60))
         hrrs = str(int(diff / 3600))
         elap = hrrs + ":" + mins + ":" + secs
-        await self.fmt_reply(message, elap + ", saved until this point.")
+        await self.fmt_reply(message, elap + ", " + str(cnt) + " saved until this point.")
 
     @perm
     async def id_of(self, event):
