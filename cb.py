@@ -129,15 +129,14 @@ class cb:
     async def activity(self, event):
         cmd = event.message.raw_text.split(' ')
         chat = None
-        print(event)
+        choice = cmd[1] if len(cmd) > 1
         if(len(cmd) == 2):
             if type(event.to_id) is tl.types.PeerChat:
-                chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat
+                chat = event.to_id.chat_id
             elif type(event.to_id) is tl.types.PeerChannel:
                 chat = event.to_id.channel_id
         elif(len(cmd) == 3):
             chat = int(cmd[2])
-        choice = cmd[1]
 
         if chat is None:
             await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
