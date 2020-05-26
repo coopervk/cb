@@ -69,9 +69,7 @@ class cb:
 
     async def fmt_reply(self, event, msg):
         msg = self.header + '\n' + msg
-        print(len(msg))
         for i in range(0, len(msg), 4096):
-            print(i, i+4096)
             await event.reply(msg[i:i+4096])
 
     @perm
