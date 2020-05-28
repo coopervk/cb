@@ -96,6 +96,12 @@ class cb:
 
     @perm
     async def set_header(self, event):
+        """ Set the header of the bot at self.header to all text after ";hdr "
+        -Supports text formatting (italic, monospace, etc)
+        -Reply message to confirm header changed includes the new header in action
+
+        Ex: ;hdr `John's Bot`
+        """
         cmd = event.message.text.split(' ')
         if(len(cmd) < 2):
             await self.fmt_reply(event, "Improper syntax for set_header!")
