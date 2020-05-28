@@ -68,6 +68,8 @@ class cb:
         return name
 
     def bot_log(self, log):
+        """ Log the string log into the file self.bot_log_file, by default ./bot_log.txt
+        """
         self.bot_log_file.write(datetime.now().isoformat() + " --> " + log + '\n')
         self.bot_log_file.flush()
 
