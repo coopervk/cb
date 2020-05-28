@@ -253,6 +253,9 @@ class cb:
         await self.fmt_reply(event, results)
 
     async def literally_everything(self, event):
+        """ Displays every single event the bot encounters for debugging or brainstorming
+        -Should not be set by default, commented out below
+        """
         print("DEBUG:", event)
 
     def run(self):
