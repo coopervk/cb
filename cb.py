@@ -35,6 +35,8 @@ class cb:
         print("Bot started")
 
     def perm(wrapped_handler):
+        """ Decorator that forces each command to be checked via its name in self.perms{}
+        """
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]
             sender = event.message.from_id
