@@ -132,6 +132,15 @@ class cb:
 
     @perm
     async def scrape(self, event):
+        """ Scrape (download) all media from a given chat/channel/group
+        -Format: ;scrape chatID(optional)
+        -Includes videos, youtube thumbnails, sometimes stickers, compressed and uncompressed photos, etc
+        -Replies with details about how long it took and how many media it saved
+        -May be useful to get the id of the dialog to scrape fist via ;id_of
+
+        -Ex:    ;scrape
+                ;scrape 12345678
+        """
         cmd = event.message.raw_text.split(' ')
         if(len(cmd) != 2):
             chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else event.to_id.user_id
