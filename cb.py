@@ -88,6 +88,8 @@ class cb:
         return datetime.strftime(dt, "%Y-%m-%dT%H:%M:%S")
 
     async def fmt_reply(self, event, msg):
+        """ Reply to a message event (does not have to be an event) with the message msg
+        """
         msg = self.header + '\n' + msg
         for i in range(0, len(msg), 4096):
             await event.reply(msg[i:i+4096])
