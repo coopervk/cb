@@ -259,6 +259,10 @@ class cb:
         print("DEBUG:", event)
 
     def run(self):
+        """ Start the bot
+        -Done here instead of init because of issues with calling async functions from non-async context,
+        requiring the use of run_until_disconnected()
+        """
         self.bot_log("Started bot")
 
         with self.client:
