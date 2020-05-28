@@ -112,6 +112,11 @@ class cb:
 
     @perm
     async def shutdown_switch(self, event):
+        """ Shutdown the bot
+        -First logs the shutdown and closes the logfile
+
+        Ex: ;sid
+        """
         self.bot_log("Shutting down")
         self.bot_log_file.close()
         await event.client.disconnect()
