@@ -164,6 +164,16 @@ class cb:
 
     @perm
     async def id_of(self, event):
+        """ Get the numerical ID of a chat/channel/group via part of its name
+        -Format: ;scrape name
+        -Goes through every single dialog
+        -Replies with list of possible matches by name --> ID
+        -Prepends list with "> "
+        -Simply uses a match method of substring (Python's in keyword) of dialog.lower() vs self.name().lower()
+
+        -Ex:    ;idof john
+                ;idof linux-chat
+        """
         cmd = event.message.raw_text.split(' ')
         if(len(cmd) < 2):
             await self.fmt_reply(event, "Improper syntax for ;idof! Need a name!")
