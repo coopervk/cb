@@ -123,6 +123,11 @@ class cb:
 
     @perm
     async def source_code(self, event):
+        """ Return the link to the repository of this bot
+        -Possibly required via AGPL3 for users, also good to just have transparancy
+
+        Ex: ;src
+        """
         await self.fmt_reply(event, "https://github.com/coopervk/cb")
 
     @perm
