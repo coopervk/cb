@@ -165,7 +165,7 @@ class cb:
     @perm
     async def id_of(self, event):
         """ Get the numerical ID of a chat/channel/group via part of its name
-        -Format: ;scrape name
+        -Format: ;idof name
         -Goes through every single dialog
         -Replies with list of possible matches by name --> ID
         -Prepends list with "> "
@@ -197,6 +197,8 @@ class cb:
 
     @perm
     async def activity(self, event):
+        """ Return a list of the top 10 most active/inactive members since time provided (if any)
+        -Format: ;active
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
 
