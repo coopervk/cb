@@ -48,6 +48,8 @@ class cb:
         return handler
 
     def name(self, entity, at=False):
+        """ Get the name of the user in the format of FirstName LastName(@username)
+        """
         if at:
             at = '@'
         else:
