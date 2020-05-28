@@ -83,6 +83,8 @@ class cb:
         return dt
 
     def datetime_to_str(self, dt):
+        """ Turn a datetime into a string for format "year-month-dayThour:minute:second"
+        """
         return datetime.strftime(dt, "%Y-%m-%dT%H:%M:%S")
 
     async def fmt_reply(self, event, msg):
