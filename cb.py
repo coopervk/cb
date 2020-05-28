@@ -74,6 +74,8 @@ class cb:
         self.bot_log_file.flush()
 
     def str_to_datetime(self, time):
+        """ Turn a string in format "year-month-dayThour:minute:second" into a datetime
+        """
         fmt = "%Y-%m-%d"
         if ':' in time:
             fmt += "T%H:%M:%S"
