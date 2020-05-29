@@ -277,12 +277,12 @@ class cb:
             await self.fmt_reply(event, "Do not disturb message set")
 
     async def do_not_disturb_responder(self, event):
-        print(type(event))
         if self.dnd:
-            if self.dnd_msg is not None:
-                await self.fmt_reply(self.dnd_msg)
-            else:
-                await event.reply(file=self.dnd_sticker)
+            if type(event.to_id) is tl.types.PeerUser or event.mentioned:
+                if self.dnd_msg is not None:
+                    await self.fmt_reply(self.dnd_msg)
+                else:
+                    await event.reply(file=self.dnd_sticker)
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
