@@ -266,13 +266,17 @@ class cb:
             await self.fmt_reply(event, "Improper syntax for do_not_disturb!")
             return
         if(cmd[1].lower() == "on"):
-            pass
+            self.dnd = True
+            await self.fmt_reply(event, "Do not disturb: `Enabled`")
         elif(cmd[1].lower() == "off"):
-            pass
+            self.dnd = False
+            await self.fmt_reply(event, "Do not disturb: `Disabled`")
         elif(cmd[1].lower() == "set"):
-            pass
+            cmd = ' '.join(cmd[1:])
+            self.dnd_msg = cmd
+            await self.fmt_reply(event, "Do not disturb message set")
 
-    async def do_not_distrub_repsonder(self, event):
+    async def do_not_disturb_responder(self, event):
         if self.dnd:
             if self.dnd_msg is not None:
                 await self.fmt_reply(self.dnd_msg)
@@ -302,6 +306,7 @@ class cb:
             self.client.add_event_handler(self.id_of, events.NewMessage(pattern=';idof'))
             self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
+            self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage())
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
