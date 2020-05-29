@@ -17,6 +17,7 @@ class cb:
                             "scrape":           {self.owner},
                             "id_of":            {self.owner},
                             "activity":         {self.owner},
+                            "do_not_disturb":   {self.owner},
                         }
 
         # Default message reply header
@@ -252,6 +253,10 @@ class cb:
 
         await self.fmt_reply(event, results)
 
+    @perm
+    async def do_not_disturb(self, event):
+        pass
+
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
         -Should not be set by default, commented out below
@@ -274,6 +279,7 @@ class cb:
             self.client.add_event_handler(self.set_header, events.NewMessage(pattern=';hdr'))
             self.client.add_event_handler(self.id_of, events.NewMessage(pattern=';idof'))
             self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
+            self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
