@@ -277,6 +277,7 @@ class cb:
             await self.fmt_reply(event, "Do not disturb message set")
 
     async def do_not_disturb_responder(self, event):
+        print(type(event))
         if self.dnd:
             if self.dnd_msg is not None:
                 await self.fmt_reply(self.dnd_msg)
@@ -306,7 +307,7 @@ class cb:
             self.client.add_event_handler(self.id_of, events.NewMessage(pattern=';idof'))
             self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
-            self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage())
+            self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage(incoming=True))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
