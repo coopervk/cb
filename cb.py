@@ -255,7 +255,18 @@ class cb:
 
     @perm
     async def do_not_disturb(self, event):
-        pass
+        cmd = event.message.raw_text.split(' ')
+        cmd_len = len(cmd)
+        if(cmd_len == 1 or cmd_len) > 3):
+            await self.fmt_reply(event, "Improper syntax for do_not_disturb!")
+            return
+        if(cmd[1].lower() = "on"):
+            pass
+        elif(cmd[1].lower() = "off"):
+            pass
+        elif(cmd[1].lower() = "set"):
+            pass
+
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
