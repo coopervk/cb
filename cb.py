@@ -272,7 +272,7 @@ class cb:
             self.dnd = False
             await self.fmt_reply(event, "Do not disturb: `Disabled`")
         elif(cmd[1].lower() == "set"):
-            cmd = ' '.join(cmd[1:])
+            cmd = ' '.join(cmd[2:])
             self.dnd_msg = cmd
             await self.fmt_reply(event, "Do not disturb message set")
 
