@@ -29,6 +29,11 @@ class cb:
         # File download location
         self.file_download_path = "./tmp"
 
+        # Set do not disturb to off by default
+        self.dnd = False
+        self.dnd_msg = None
+        self.dnd_sticker = "./dnd.webp"
+
         # Start
         ID = os.environ["TELEGRAM_API_ID"]
         hs = os.environ["TELEGRAM_API_HASH"]
