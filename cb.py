@@ -272,6 +272,13 @@ class cb:
         elif(cmd[1].lower() = "set"):
             pass
 
+    async def do_not_distrub_repsonder(self, event):
+        if self.dnd:
+            if self.dnd_msg is not None:
+                await self.fmt_reply(self.dnd_msg)
+            else:
+                await event.reply(file=self.dnd_sticker)
+
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
