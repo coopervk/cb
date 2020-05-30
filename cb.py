@@ -260,6 +260,15 @@ class cb:
 
     @perm
     async def do_not_disturb(self, event):
+        """ Turn on or off do not disturb mode or set the do not disturb mode picture
+        -on: Turn on
+        -off: Turn off
+        -set: Set the dnd mode image to the following message
+
+        Ex: ;dnd on
+            ;dnd off
+            ;dnd set Please leave me alone
+        """
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
         if(cmd_len == 1 or cmd_len > 3):
@@ -277,6 +286,9 @@ class cb:
             await self.fmt_reply(event, "Do not disturb message set")
 
     async def do_not_disturb_responder(self, event):
+        """ Helper function for responding to messages when do not disturb is set
+        -Replies when receiving a private message or when "mentioned" in a chat/channel
+        """
         if self.dnd:
             if type(event.to_id) is tl.types.PeerUser or event.mentioned:
                 if self.dnd_msg is not None:
