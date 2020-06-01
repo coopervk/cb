@@ -289,6 +289,7 @@ class cb:
     async def do_not_disturb_responder(self, event):
         """ Helper function for responding to messages when do not disturb is set
         -Replies when receiving a private message or when "mentioned" in a chat/channel
+        -Only replies if the person who mentioned or pm'd hasn't gotten dnd'd recently (default 10 mins)
         """
         if self.dnd:
             if type(event.to_id) is tl.types.PeerUser or event.mentioned:
