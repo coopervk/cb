@@ -302,7 +302,7 @@ class cb:
                 else:
                     mins = None
 
-                if mins and mins > 10:
+                if not mins or mins > 10:
                     if self.dnd_msg is not None:
                         await self.fmt_reply(self.dnd_msg)
                     else:
