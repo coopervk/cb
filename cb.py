@@ -300,7 +300,7 @@ class cb:
                 if sender in self.dnd_tracker:
                     before = self.dnd_tracker[sender]
                     diff = (now - before).total_seconds()
-                    mins = int(diff / 60))
+                    mins = int(diff / 60)
                 else:
                     mins = None
 
