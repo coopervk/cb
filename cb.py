@@ -47,11 +47,13 @@ class cb:
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]
             sender = event.message.from_id
+            entity = await self.client.get_entity(sender)
+            person = str(sender) + "(" + self.name(entity) + ")"
             if auth == {"ALL"} or sender in auth:
-                self.bot_log(str(sender) + " permitted for " + wrapped_handler.__name__)
+                self.bot_log(person + " permitted for " + wrapped_handler.__name__)
                 await wrapped_handler(self, event)
             else:
-                self.bot_log(str(sender) + " denied for " + wrapped_handler.__name__)
+                self.bot_log(person + " denied for " + wrapped_handler.__name__)
         return handler
 
     def name(self, entity, at=False):
