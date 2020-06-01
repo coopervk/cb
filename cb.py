@@ -33,6 +33,7 @@ class cb:
         self.dnd = False
         self.dnd_msg = None
         self.dnd_sticker = "./dnd.webp"
+        self.dnd_tracker = {}
 
         # Start
         ID = os.environ["TELEGRAM_API_ID"]
@@ -290,10 +291,11 @@ class cb:
         -Replies when receiving a private message or when "mentioned" in a chat/channel
         """
         if self.dnd:
-            self.dnd_tracker = {}
             if type(event.to_id) is tl.types.PeerUser or event.mentioned:
-                now = datetime.now().isoformat()
+                now = datetime.now()
                 sender = event.message.from_id
+                print(sender)
+                print(now)
 
                 if sender in self.dnd_tracker:
                     before = self.dnd_tracker[sender]
@@ -302,6 +304,7 @@ class cb:
                 else:
                     mins = None
 
+                print(mins)
                 if not mins or mins > 10:
                     if self.dnd_msg is not None:
                         await self.fmt_reply(self.dnd_msg)
