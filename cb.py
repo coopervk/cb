@@ -290,11 +290,25 @@ class cb:
         -Replies when receiving a private message or when "mentioned" in a chat/channel
         """
         if self.dnd:
+            self.dnd_tracker = {}
             if type(event.to_id) is tl.types.PeerUser or event.mentioned:
-                if self.dnd_msg is not None:
-                    await self.fmt_reply(self.dnd_msg)
+                now = datetime.now().isoformat()
+                sender = event.message.from_id
+
+                if sender in self.dnd_tracker:
+                    before = self.dnd_tracker[sender]
+                    diff = (now - before).total_seconds()
+                    mins = str(int(diff / 60))
                 else:
-                    await event.reply(file=self.dnd_sticker)
+                    mins = None
+
+                if mins and mins > 10:
+                    if self.dnd_msg is not None:
+                        await self.fmt_reply(self.dnd_msg)
+                    else:
+                        await event.reply(file=self.dnd_sticker)
+
+                self.dnd_tracker[sender] = now
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
