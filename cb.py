@@ -79,7 +79,7 @@ class cb:
     def bot_log(self, log):
         """ Log the string log into the file self.bot_log_file, by default ./bot_log.txt
         """
-        self.bot_log_file.write(datetime.now().isoformat() + " --> " + log + '\n')
+        self.bot_log_file.write(self.datetime_to_str(datetime.now()) + " --> " + log + '\n')
         self.bot_log_file.flush()
 
     def str_to_datetime(self, time):
