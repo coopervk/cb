@@ -207,6 +207,12 @@ class cb:
 
     @perm
     async def name_of(self, event):
+        """ Get the name which corresponds to a given ID
+        -Format: ;name ID
+        -A fancy wrapper around self.name()
+
+        -Ex:    ;name 12345678
+        """
         cmd = event.message.raw_text.split(' ')
         if(len(cmd) < 2):
             await self.fmt_reply(event, "Improper syntax for ;name! Need an ID argument!")
