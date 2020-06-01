@@ -308,7 +308,7 @@ class cb:
                     else:
                         await event.reply(file=self.dnd_sticker)
 
-                self.dnd_tracker[sender] = now
+                    self.dnd_tracker[sender] = now
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
