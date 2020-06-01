@@ -16,6 +16,7 @@ class cb:
                             "source_code":      {"ALL"},
                             "scrape":           {self.owner},
                             "id_of":            {self.owner},
+                            "name_of":          {self.owner},
                             "activity":         {self.owner},
                             "do_not_disturb":   {self.owner},
                         }
@@ -205,6 +206,20 @@ class cb:
             await self.fmt_reply(event, answer)
 
     @perm
+    async def name_of(self, event):
+        cmd = event.message.raw_text.split(' ')
+        if(len(cmd) < 2):
+            await self.fmt_reply(event, "Improper syntax for ;name! Need an ID argument!")
+            return
+
+        try:
+            entity = await self.client.get_entity(int(cmd[1]))
+            name = self.name(entity)
+            await self.fmt_reply(event, name)
+        except ValueError:
+            await self.fmt_reply(event, "Improper syntax for ;name! Argument was not an ID")
+
+    @perm
     async def activity(self, event):
         """ Return a list of the top 10 most active/inactive members since time provided (if any)
         -Format: ;activity choice date(optional) chatID(optional)
@@ -334,6 +349,7 @@ class cb:
             self.client.add_event_handler(self.scrape, events.NewMessage(pattern=';scrape'))
             self.client.add_event_handler(self.set_header, events.NewMessage(pattern=';hdr'))
             self.client.add_event_handler(self.id_of, events.NewMessage(pattern=';idof'))
+            self.client.add_event_handler(self.name_of, events.NewMessage(pattern=';name'))
             self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
             self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage(incoming=True))
