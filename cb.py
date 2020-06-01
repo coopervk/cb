@@ -138,7 +138,7 @@ class cb:
 
         Ex: ;src
         """
-        await self.fmt_reply(event, "https://github.com/coopervk/cb")
+        await self.fmt_reply(event, "https://github.com/gdynamics/cb")
 
     @perm
     async def scrape(self, event):
