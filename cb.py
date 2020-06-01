@@ -294,8 +294,6 @@ class cb:
             if type(event.to_id) is tl.types.PeerUser or event.mentioned:
                 now = datetime.now()
                 sender = event.message.from_id
-                print(sender)
-                print(now)
 
                 if sender in self.dnd_tracker:
                     before = self.dnd_tracker[sender]
@@ -304,8 +302,7 @@ class cb:
                 else:
                     mins = None
 
-                print(mins)
-                if not mins or mins > 10:
+                if mins is None or mins > 10:
                     if self.dnd_msg is not None:
                         await self.fmt_reply(self.dnd_msg)
                     else:
