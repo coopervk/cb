@@ -232,18 +232,18 @@ class cb:
     async def activity(self, event):
         """ Return a list of the top 10 most active/inactive members since time provided (if any)
         -Format: ;activity choice date(optional) chatID(optional) results_count(optional)
-        -Choice can be active or inactive, can be shortened to a or i
-        -Date is in format year-month-day or year-month-dayThour:minute:second
-        -If you do not want to choose a date but you want a chat ID, use "none"
-        -Uses UTC!
-        -Chat ID can be discovered with ;idof
+        -choice         --> active or inactive, can be shortened to a or i
+        -date           --> time in format year-month-day or year-month-dayThour:minute:second, uses UTC, can be none
+        -chatID         --> id of chat you want to check the activity in, can be none, can find chat IDs with ;idof
+        -results_count  --> number of results you want, either a number or "all"
+
         -Useful for picking out "lurkers" and other suspicious users
 
         Ex:     ;activity active
                 ;activity inactive 2020-05-30
                 ;activity i none 10203040
-                ;activity i 2020-05-30 100
-                ;activity i 2020-05-30 all
+                ;activity i 2020-05-30 10203040 100
+                ;activity i 2020-05-30 none all
         """
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
