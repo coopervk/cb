@@ -265,7 +265,7 @@ class cb:
             if cmd[3].lower() != "none":
                 chat = int(cmd[3])
         if cmd_len > 4:
-            if cmd[4].lower = "all":
+            if cmd[4].lower == "all":
                 results_count = "all"
             else:
                 results_count = int(cmd[4])
