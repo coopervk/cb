@@ -165,7 +165,7 @@ class cb:
                 try:
                     await message.download_media(self.file_download_path)
                     cnt += 1
-                except floodWaitError as e:
+                except FloodWaitError as e:
                     await asyncio.sleep(e.seconds)
         after = datetime.now()
         diff = (after - before).total_seconds()
