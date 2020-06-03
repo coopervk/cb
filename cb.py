@@ -251,7 +251,7 @@ class cb:
         if cmd_len > 1:
             choice = cmd[1][0].lower()
             dt = None
-            results_count
+            results_count = 10
             if type(event.to_id) is tl.types.PeerChat:
                 chat = event.to_id.chat_id
             elif type(event.to_id) is tl.types.PeerChannel:
@@ -266,7 +266,7 @@ class cb:
                 chat = int(cmd[3])
         if cmd_len > 4:
             if cmd[4].lower = "all":
-                results_count = None
+                results_count = "all"
             else:
                 results_count = int(cmd[4])
         if cmd_len < 2 or cmd_len > 5:
@@ -284,12 +284,15 @@ class cb:
         sorted_members = members.values()
         sorted_members = sorted(sorted_members, key=lambda l:l[1], reverse=choice == 'a')
 
+        if reslts_count == "all":
+            results_count = len(sorted_members)
+
         choice = "most" if choice=='a' else "least"
-        results = "The 10 " + choice + " active users"
+        results = "The " + str(results_count) + " " + choice + " active users"
         if dt:
             results += " since " + self.datetime_to_str(dt)
         results += " are:\n"
-        for i in range(min(len(sorted_members),10)):
+        for i in range(min(len(sorted_members),results_count)):
             results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + " --> " + str(sorted_members[i][1]) + '\n'
 
         await self.fmt_reply(event, results)
