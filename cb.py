@@ -231,7 +231,7 @@ class cb:
     @perm
     async def activity(self, event):
         """ Return a list of the top 10 most active/inactive members since time provided (if any)
-        -Format: ;activity choice date(optional) chatID(optional)
+        -Format: ;activity choice date(optional) chatID(optional) results_count(optional)
         -Choice can be active or inactive, can be shortened to a or i
         -Date is in format year-month-day or year-month-dayThour:minute:second
         -If you do not want to choose a date but you want a chat ID, use "none"
@@ -242,6 +242,8 @@ class cb:
         Ex:     ;activity active
                 ;activity inactive 2020-05-30
                 ;activity i none 10203040
+                ;activity i 2020-05-30 100
+                ;activity i 2020-05-30 all
         """
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
@@ -249,6 +251,7 @@ class cb:
         if cmd_len > 1:
             choice = cmd[1][0].lower()
             dt = None
+            results_count
             if type(event.to_id) is tl.types.PeerChat:
                 chat = event.to_id.chat_id
             elif type(event.to_id) is tl.types.PeerChannel:
@@ -259,8 +262,14 @@ class cb:
             else:
                 dt = None
         if cmd_len > 3:
-            chat = int(cmd[3])
-        if cmd_len < 2 or cmd_len > 4:
+            if cmd[3].lower() != "none":
+                chat = int(cmd[3])
+        if cmd_len > 4:
+            if cmd[4].lower = "all":
+                results_count = None
+            else:
+                results_count = int(cmd[4])
+        if cmd_len < 2 or cmd_len > 5:
             await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
             return
 
