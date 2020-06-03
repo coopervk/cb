@@ -1,6 +1,6 @@
 import asyncio
 import os
-from telethon import TelegramClient, events, tl
+from telethon import TelegramClient, events, tl, errors
 from datetime import datetime
 import logging
 logging.basicConfig(level=logging.INFO)
@@ -162,8 +162,11 @@ class cb:
         before = datetime.now()
         async for message in self.client.iter_messages(chat):
             if message.media is not None:
-                await message.download_media(self.file_download_path)
-                cnt += 1
+                try:
+                    await message.download_media(self.file_download_path)
+                    cnt += 1
+                except floodWaitError as e:
+                    await asyncio.sleep(e.seconds)
         after = datetime.now()
         diff = (after - before).total_seconds()
         secs = str(int(diff % 60))
