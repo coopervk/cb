@@ -248,6 +248,9 @@ class cb:
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
 
+        if cmd_len < 2 or cmd_len > 5:
+            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
+            return
         if cmd_len > 1:
             choice = cmd[1][0].lower()
             dt = None
@@ -269,9 +272,6 @@ class cb:
                 results_count = "all"
             else:
                 results_count = int(cmd[4])
-        if cmd_len < 2 or cmd_len > 5:
-            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
-            return
 
         members = {}
         async for member in self.client.iter_participants(chat):
