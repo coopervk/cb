@@ -28,7 +28,7 @@ class cb:
         self.bot_log_file = open("./bot_log.txt", 'a')
 
         # File download location
-        self.file_download_path = "./tmp"
+        self.file_download_path = "./tmp/"
 
         # Set do not disturb to off by default
         self.dnd = False
