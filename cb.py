@@ -9,7 +9,6 @@ class cb:
     def __init__(self):
         # Permissions
         self.owner = int(os.environ["TELEGRAM_OWNER_ID"])
-        self.control_channel = 288400190
         self.perms =    {
                             "set_header":       {self.owner},
                             "shutdown_switch":  {self.owner},
