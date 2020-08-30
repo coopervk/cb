@@ -2,26 +2,25 @@ import asyncio
 import os
 from telethon import TelegramClient, events, tl, errors
 from datetime import datetime
+import json
 import logging
 logging.basicConfig(level=logging.INFO)
 
 class cb:
     def __init__(self):
+        # Load from config file
+        with open("config.json", "r") as config_file:
+            config = json.load(config_file)
+
         # Permissions
-        self.owner = int(os.environ["TELEGRAM_OWNER_ID"])
-        self.perms =    {
-                            "set_header":       {self.owner},
-                            "shutdown_switch":  {self.owner},
-                            "source_code":      {"ALL"},
-                            "scrape":           {self.owner},
-                            "id_of":            {self.owner},
-                            "name_of":          {self.owner},
-                            "activity":         {self.owner},
-                            "do_not_disturb":   {self.owner},
-                        }
+        self.owner = config['owner']
+        self.perms = config['perms']
+        for command in self.perms:
+            if self.perms[command]['whitelist'] == [ "OWNER" ]:
+                self.perms[command]['whitelist'] = [ self.owner ]
 
         # Default message reply header
-        self.header = "`CoopBoop`"
+        self.header = config['header']
 
         # Set file to log bot activity to
         self.bot_log_file = open("./bot_log.txt", 'a')
@@ -31,28 +30,30 @@ class cb:
 
         # Set do not disturb to off by default
         self.dnd = False
-        self.dnd_msg = None
-        self.dnd_sticker = "./dnd.webp"
+        self.dnd_msg = config['dnd_msg'] if config['dnd_msg'] != "None" else None 
+        self.dnd_pic = config['dnd_pic'] if config['dnd_pic'] != "None" else None
         self.dnd_tracker = {}
 
         # Start
-        ID = os.environ["TELEGRAM_API_ID"]
-        hs = os.environ["TELEGRAM_API_HASH"]
-        self.client = TelegramClient('gdynamics', ID, hs)
+        API_id = config['API_id']
+        API_hash = config['API_hash']
+        owner_name = config['owner_name']
+        self.client = TelegramClient(owner_name, API_id, API_hash)
         print("Bot started")
 
     def perm(wrapped_handler):
         """ Decorator that forces each command to be checked via its name in self.perms{}
         """
         async def handler(self, event):
-            auth = self.perms[wrapped_handler.__name__]
+            auth = self.perms[wrapped_handler.__name__]['whitelist']
+            xauth = self.perms[wrapped_handler.__name__]['blacklist']
             sender = event.message.from_id
             if sender:
                 entity = await self.client.get_entity(sender)
                 person = str(sender) + "(" + self.name(entity) + ")"
             else:
                 person = "(N/A)"
-            if auth == {"ALL"} or sender in auth:
+            if not sender in xauth and (auth == ['ALL'] or sender in auth):
                 self.bot_log(person + " permitted for " + wrapped_handler.__name__)
                 await wrapped_handler(self, event)
             else:
@@ -347,7 +348,7 @@ class cb:
                     if self.dnd_msg is not None:
                         await self.fmt_reply(self.dnd_msg)
                     else:
-                        await event.reply(file=self.dnd_sticker)
+                        await event.reply(file=self.dnd_pic)
 
                     self.dnd_tracker[sender] = now
 
