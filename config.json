@@ -1,0 +1,43 @@
+{
+  "owner_name": 0,
+  "owner": 0,
+  "API_id": 0,
+  "API_hash": 0,
+  "perms": {
+    "set_header": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
+    },
+    "shutdown_switch": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
+    },
+    "source_code": {
+      "whitelist": [ "ALL" ],
+      "blacklist": []
+    },
+    "scrape": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
+    },
+    "id_of": {
+      "whitelist": [ "ALL" ],
+      "blacklist": []
+    },
+    "name_of": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
+    },
+    "activity": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
+    },
+    "do_not_disturb": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
+    }
+  },
+  "header": "`CoopBoop`",
+  "dnd_msg": "None",
+  "dnd_pic": "./dnd.webp"
+}
