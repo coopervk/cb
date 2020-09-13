@@ -354,7 +354,6 @@ class cb:
 
     @perm
     async def exif(self, event):
-        print(event)
         cmd = event.message.raw_text.split(' ')
 
         if len(cmd) != 2:
