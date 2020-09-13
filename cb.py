@@ -392,7 +392,7 @@ class cb:
                 self.fmt_reply(event, "Image never had exif data!")
             else:
                 clean_image_path = os.path.join(self.file_download_path, clean_image)
-                await send_file(file=clean_image_path, force_document=True, reply_to=event.message)
+                await self.client.send_file(file=clean_image_path, force_document=True, reply_to=event.message)
         elif cmd[1] == "info":
             await self.fmt_reply(event, "*post all exif data on file*")
         else:
