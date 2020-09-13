@@ -363,7 +363,10 @@ class cb:
         elif event.message.media is None:
             await self.fmt_reply(event, "No image given!")
             return
-        #elif event.message.
+        elif not isinstance(event.message.media, MessageMediaDocument):
+            await self.fmt_reply(event, "Did not send image as file!")
+        elif not event.message.media.mime_type != "image\jpeg":
+            await self.fmt_reply(event, "This bot only supports JPEG/.jpg")
 
         try:
             await event.message.download_media(self.file_download_path)
