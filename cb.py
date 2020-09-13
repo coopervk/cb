@@ -352,6 +352,21 @@ class cb:
 
                     self.dnd_tracker[sender] = now
 
+    @perm
+    async def exif(self, event):
+        cmd = event.message.raw_text.split(' ')
+
+        if len(cmd) != 2:
+            await self.fmt_reply(event, "Improper syntax for exif!")
+
+        if cmd[1] = "clean":
+            await self.fmt_reply(event, "*clean image and repost it back at you*")
+        elif cmd[1] = "details":
+            await self.fmt_reply(event, "*post all exif data on file*")
+        else:
+            await self.fmt_reply(event, "Improper syntax for exif!")
+        
+
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
         -Should not be set by default, commented out below
@@ -377,6 +392,7 @@ class cb:
             self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
             self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage(incoming=True))
+            self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
