@@ -354,13 +354,14 @@ class cb:
 
     @perm
     async def exif(self, event):
+        print(event)
         cmd = event.message.raw_text.split(' ')
 
         if len(cmd) != 2:
             await self.fmt_reply(event, "Improper syntax for exif!")
             return
         elif event.message.media is None:
-            await self.fmt_reply(event, "No image given!")
+                await self.fmt_reply(event, "No image given!")
             return
         #elif event.message.
 
@@ -413,7 +414,7 @@ class cb:
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
             self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
-            self.client.add_event_handler(self.literally_everything)
+            #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
             # Run bot
