@@ -352,6 +352,17 @@ class cb:
 
                     self.dnd_tracker[sender] = now
 
+    def exif_clean(image_name):
+        with open(image_name, 'rb') as image:
+            image = exif.Image(image)
+            if not image.has_exif:
+                return None
+            image.delete_all()
+            clean_image_name = ''.join(image_name.split('.')[:-1]) + "_cleaned.jpg"
+            with open(clean_image_name, 'wb') as cleaned_image:
+                cleaned_image.write(image.get_file())
+        return clean_image_name
+
     @perm
     async def exif(self, event):
         cmd = event.message.raw_text.split(' ')
@@ -385,17 +396,6 @@ class cb:
             await self.fmt_reply(event, "*post all exif data on file*")
         else:
             await self.fmt_reply(event, "Improper syntax for exif!")
-
-    def exif_clean(image_name):
-        with open(image_name, 'rb') as image:
-            image = exif.Image(image)
-            if not image.has_exif:
-                return None
-            image.delete_all()
-            clean_image_name = ''.join(image_name.split('.')[:-1]) + "_cleaned.jpg"
-            with open(clean_image_name, 'wb') as cleaned_image:
-                cleaned_image.write(image.get_file())
-        return clean_image_name
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
