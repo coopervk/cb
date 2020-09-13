@@ -365,8 +365,10 @@ class cb:
             return
         elif not isinstance(event.message.media, tl.types.MessageMediaDocument):
             await self.fmt_reply(event, "Did not send image as file!")
+            return
         elif not event.message.media.document.mime_type != "image\jpeg":
             await self.fmt_reply(event, "This bot only supports JPEG/.jpg")
+            return
 
         try:
             await event.message.download_media(self.file_download_path)
