@@ -359,6 +359,15 @@ class cb:
         if len(cmd) != 2:
             await self.fmt_reply(event, "Improper syntax for exif!")
             return
+        elif event.message.media is None:
+            await.self.fmt_reply(event, "No image given!")
+            return
+        #elif event.message.
+
+        try:
+            await event.message.download_media(self.file_download_path)
+        except FloodWaitError as e:
+            await asyncio.sleep(e.seconds)
 
         if cmd[1] == "clean":
             await self.fmt_reply(event, "*clean image and repost it back at you*")
@@ -366,6 +375,17 @@ class cb:
             await self.fmt_reply(event, "*post all exif data on file*")
         else:
             await self.fmt_reply(event, "Improper syntax for exif!")
+
+    def exif_clean(image_name):
+        with open(image_name, 'rb') as image:
+            image = exif.Image(image)
+            if not image.has_exif:
+                return None
+            image.delete_all()
+            clean_image_name = ''.join(image_name.split('.')[:-1]) + "_cleaned.jpg"
+            with open(clean_image_name, 'wb') as cleaned_image:
+                cleaned_image.write(image.get_file())
+            return clean_image_name
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
@@ -393,7 +413,7 @@ class cb:
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
             self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
-            #self.client.add_event_handler(self.literally_everything)
+            self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
             # Run bot
