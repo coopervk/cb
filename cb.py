@@ -360,7 +360,7 @@ class cb:
             await self.fmt_reply(event, "Improper syntax for exif!")
             return
         elif event.message.media is None:
-            await.self.fmt_reply(event, "No image given!")
+            await self.fmt_reply(event, "No image given!")
             return
         #elif event.message.
 
