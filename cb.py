@@ -107,7 +107,7 @@ class cb:
         for i in range(0, len(msg), 4096):
             await event.reply(msg[i:i+4096])
 
-    def exif_clean(image_name):
+    def exif_clean(self, image_name):
         with open(image_name, 'rb') as image:
             image = exif.Image(image)
             if not image.has_exif:
