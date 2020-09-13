@@ -386,7 +386,7 @@ class cb:
             await asyncio.sleep(e.seconds)
 
         if cmd[1] == "clean":
-            clean_image = exif_clean(image_provided)
+            clean_image = self.exif_clean(image_provided)
             if clean_image is None:
                 self.fmt_reply(event, "Image never had exif data!")
             else:
