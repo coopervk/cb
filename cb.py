@@ -371,12 +371,17 @@ class cb:
             return
 
         try:
-            await event.message.download_media(self.file_download_path)
+            image_provided = await event.message.download_media(self.file_download_path)
         except FloodWaitError as e:
             await asyncio.sleep(e.seconds)
 
         if cmd[1] == "clean":
-            await self.fmt_reply(event, "*clean image and repost it back at you*")
+            clean_image = exif_clean(image_provided)
+            if clean_image is None:
+                self.fmt_reply(event, "Image never had exif data!")
+            else:
+                clean_image_path = os.path.join(self.file_download_path, clean_image)
+                await send_file(file=clean_image_path, force_document=True, reply_to=event.message)
         elif cmd[1] == "info":
             await self.fmt_reply(event, "*post all exif data on file*")
         else:
@@ -391,7 +396,7 @@ class cb:
             clean_image_name = ''.join(image_name.split('.')[:-1]) + "_cleaned.jpg"
             with open(clean_image_name, 'wb') as cleaned_image:
                 cleaned_image.write(image.get_file())
-            return clean_image_name
+        return clean_image_name
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
