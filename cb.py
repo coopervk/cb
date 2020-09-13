@@ -3,6 +3,7 @@ import os
 from telethon import TelegramClient, events, tl, errors
 from datetime import datetime
 import json
+import exif
 import logging
 logging.basicConfig(level=logging.INFO)
 
