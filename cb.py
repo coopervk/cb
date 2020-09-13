@@ -362,7 +362,7 @@ class cb:
 
         if cmd[1] == "clean":
             await self.fmt_reply(event, "*clean image and repost it back at you*")
-        elif cmd[1] == "details":
+        elif cmd[1] == "info":
             await self.fmt_reply(event, "*post all exif data on file*")
         else:
             await self.fmt_reply(event, "Improper syntax for exif!")
