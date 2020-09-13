@@ -107,6 +107,17 @@ class cb:
         for i in range(0, len(msg), 4096):
             await event.reply(msg[i:i+4096])
 
+    def exif_clean(image_name):
+        with open(image_name, 'rb') as image:
+            image = exif.Image(image)
+            if not image.has_exif:
+                return None
+            image.delete_all()
+            clean_image_name = ''.join(image_name.split('.')[:-1]) + "_cleaned.jpg"
+            with open(clean_image_name, 'wb') as cleaned_image:
+                cleaned_image.write(image.get_file())
+        return clean_image_name
+
     @perm
     async def set_header(self, event):
         """ Set the header of the bot at self.header to all text after ";hdr "
@@ -351,17 +362,6 @@ class cb:
                         await event.reply(file=self.dnd_pic)
 
                     self.dnd_tracker[sender] = now
-
-    def exif_clean(image_name):
-        with open(image_name, 'rb') as image:
-            image = exif.Image(image)
-            if not image.has_exif:
-                return None
-            image.delete_all()
-            clean_image_name = ''.join(image_name.split('.')[:-1]) + "_cleaned.jpg"
-            with open(clean_image_name, 'wb') as cleaned_image:
-                cleaned_image.write(image.get_file())
-        return clean_image_name
 
     @perm
     async def exif(self, event):
