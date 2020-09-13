@@ -21,7 +21,7 @@
       "blacklist": []
     },
     "id_of": {
-      "whitelist": [ "ALL" ],
+      "whitelist": [ "OWNER" ],
       "blacklist": []
     },
     "name_of": {
@@ -33,6 +33,10 @@
       "blacklist": []
     },
     "do_not_disturb": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
+    },
+    "exif": {
       "whitelist": [ "OWNER" ],
       "blacklist": []
     }
