@@ -358,6 +358,7 @@ class cb:
 
         if len(cmd) != 2:
             await self.fmt_reply(event, "Improper syntax for exif!")
+            return
 
         if cmd[1] == "clean":
             await self.fmt_reply(event, "*clean image and repost it back at you*")
@@ -365,7 +366,6 @@ class cb:
             await self.fmt_reply(event, "*post all exif data on file*")
         else:
             await self.fmt_reply(event, "Improper syntax for exif!")
-        
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
