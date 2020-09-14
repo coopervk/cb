@@ -418,7 +418,7 @@ class cb:
             else:
                 accumulator_str = ""
                 for exif_prop, exif_val in exif_data.items():
-                    accumulator_str += f"**{exif_prop}**: {exif_val})\n"
+                    accumulator_str += f"**{exif_prop}**: {exif_val}\n"
                 await self.fmt_reply(event, accumulator_str)
                 os.remove(image_provided)
         else:
