@@ -407,12 +407,20 @@ class cb:
         if cmd[1] == "clean":
             clean_image = self.exif_clean(image_provided)
             if clean_image is None:
-                self.fmt_reply(event, "Image never had exif data!")
+                await self.fmt_reply(event, "Image never had exif data!")
             else:
                 clean_image_path = os.path.join(self.file_download_path, clean_image)
                 await event.reply(file=clean_image_path, force_document=True)
         elif cmd[1] == "info":
-            await self.fmt_reply(event, "*post all exif data on file*")
+            exif_data = self.exif_data(image_provided)
+            if exif_data is None:
+                await self.fmt_reply(event, "Image never had exif data!")
+            else:
+                accumulator_str = ""
+                for exif_prop, exif_val in exif_data.items():
+                    accumulator_str += f"**{exif_prop}**: {exif_val})"
+                await self.fmt_reply(event, accumulator_str)
+                os.remove(image_provided)
         else:
             await self.fmt_reply(event, "Improper syntax for exif!")
 
