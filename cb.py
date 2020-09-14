@@ -411,14 +411,14 @@ class cb:
             else:
                 clean_image_path = os.path.join(self.file_download_path, clean_image)
                 await event.reply(file=clean_image_path, force_document=True)
-        elif cmd[1] == "info":
+        elif cmd[1] == "data":
             exif_data = self.exif_data(image_provided)
             if exif_data is None:
                 await self.fmt_reply(event, "Image never had exif data!")
             else:
                 accumulator_str = ""
                 for exif_prop, exif_val in exif_data.items():
-                    accumulator_str += f"**{exif_prop}**: {exif_val})"
+                    accumulator_str += f"**{exif_prop}**: {exif_val})\n"
                 await self.fmt_reply(event, accumulator_str)
                 os.remove(image_provided)
         else:
