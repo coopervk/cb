@@ -110,6 +110,8 @@ class cb:
             await event.reply(msg[i:i+4096])
 
     def exif_clean(self, image_name):
+        """ Remove all exif data from the provided image
+        """
         with open(image_name, 'rb') as image:
             image = exif.Image(image)
             if not image.has_exif:
@@ -121,6 +123,8 @@ class cb:
         return clean_image_name
     
     def exif_data(self, image_name):
+        """ Return a dict of all the known information about the file
+        """
         with open(image_name, 'rb') as image:
             image = exif.Image(image)
             if image.has_exif:
@@ -384,6 +388,12 @@ class cb:
 
     @perm
     async def exif(self, event):
+        """ Remove or return the data from a JPEG/.jpg file.
+        -Format:    ;exif clean
+                    ;exif data
+        -Must provide thumbnailed/uncompressed JPEG/.jpg file (no support for TIFF yet)
+        -Command must be the "description"/accompanying message of the uploaded image
+        """
         cmd = event.message.raw_text.split(' ')
 
         if len(cmd) != 2:
