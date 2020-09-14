@@ -131,7 +131,7 @@ class cb:
                         if prop[0:1] != "_":
                             if not isinstance(val, types.MethodType):
                                 exif_data[prop] = val
-                    except:
+                    except Exception:
                         pass
                 return exif_data
             else:
