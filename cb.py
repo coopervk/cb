@@ -411,6 +411,8 @@ class cb:
             else:
                 clean_image_path = os.path.join(self.file_download_path, clean_image)
                 await event.reply(file=clean_image_path, force_document=True)
+                os.remove(image_provided)
+                os.remove(clean_image_path)
         elif cmd[1] == "data":
             exif_data = self.exif_data(image_provided)
             if exif_data is None:
