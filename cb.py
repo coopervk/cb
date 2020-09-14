@@ -4,6 +4,7 @@ from telethon import TelegramClient, events, tl, errors
 from datetime import datetime
 import json
 import exif
+import types
 import logging
 logging.basicConfig(level=logging.INFO)
 
@@ -118,6 +119,23 @@ class cb:
             with open(clean_image_name, 'wb') as cleaned_image:
                 cleaned_image.write(image.get_file())
         return clean_image_name
+    
+    def exif_data(self, image_name):
+        with open(image_name, 'rb') as image:
+            image = exif.Image(image)
+            if image.has_exif:
+                exif_data = {}
+                for prop in dir(image):
+                    try:
+                        val = getattr(image, prop)
+                        if prop[0:1] != "_":
+                            if not isinstance(val, types.MethodType):
+                                exif_data[prop] = val
+                    except:
+                        pass
+                return exif_data
+            else:
+                return None
 
     @perm
     async def set_header(self, event):
