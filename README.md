@@ -4,7 +4,7 @@
 Telethon based Telegram userbot
 
 ## Get it running
-1. Install the Telethon libraries `pip install telethon`
+1. Install the Telethon and exif libraries `pip install telethon exif`
 2. Create a Telegram App at https://my.telegram.org/apps
 3. Save the API_id and API_hash to their associated fields in config.json
 4. Launch bot with `python cb.py` on Linux or `py cb.py` on Windows
@@ -36,6 +36,7 @@ See a more in depth explanation of each function in the associated docstring
 6. ;name, name_of, Get the name & username from a given ID (useful for tracking down people in log file)
 7. ;activity, activity, Find the most or least common posters since a given date. Default 10
 8. ;dnd, do_not_disturb, Enable/disable/set message for do not disturb mode. Defaults to only 1 message per ID in 10 mins to prevent spam
+9. ;exif, exif, Get(data)/remove(clean) the exif data from a provided JPEG/.jpg image
 
 ### Customization
 
