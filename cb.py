@@ -6,11 +6,12 @@ Launch Telethon based Telegram userbot
 import asyncio
 from datetime import datetime
 import json
-import exif
 import types
 import logging
 import os
+import exif
 from telethon import TelegramClient, events, tl, errors
+
 logging.basicConfig(level=logging.INFO)
 
 class CoopBoop:
@@ -18,9 +19,10 @@ class CoopBoop:
     Driver class for the userbot
     """
 
-    def __init__(self):
-        # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-many-instance-attributes
+    # pylint: disable=no-self-use
 
+    def __init__(self):
         # Load from config file
         with open("config.json", "r") as config_file:
             config = json.load(config_file)
@@ -58,6 +60,8 @@ class CoopBoop:
         """ Decorator that forces each command to be checked via its name in self.perms{}
         """
         # pylint: disable=no-self-argument
+        # pylint: disable=not-callable
+        # pylint: disable=no-member
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]['whitelist']
             xauth = self.perms[wrapped_handler.__name__]['blacklist']
@@ -74,19 +78,19 @@ class CoopBoop:
                 self.bot_log(person + " denied for " + wrapped_handler.__name__)
         return handler
 
-    def name(self, entity, at=False):
+    def name(self, entity, at_symbol=False):
         """ Get the name of the user in the format of FirstName LastName(@username)
         """
-        if at:
-            at = '@'
+        if at_symbol:
+            at_symbol = '@'
         else:
-            at = ''
+            at_symbol = ''
 
-        if type(entity) is tl.types.User:
+        if isinstance(entity, tl.types.User):
             if not entity.deleted:
                 name = entity.first_name
                 name += ' ' + entity.last_name if entity.last_name else ''
-                name += '(' + at + entity.username + ')' if entity.username else ''
+                name += '(' + at_symbol + entity.username + ')' if entity.username else ''
             else:
                 name = "<Deleted Account>"
         else:
@@ -106,13 +110,13 @@ class CoopBoop:
         fmt = "%Y-%m-%d"
         if ':' in time:
             fmt += "T%H:%M:%S"
-        dt = datetime.strptime(time, fmt)
-        return dt
+        date = datetime.strptime(time, fmt)
+        return date
 
-    def datetime_to_str(self, dt):
+    def datetime_to_str(self, date):
         """ Turn a datetime into a string for format "year-month-dayThour:minute:second"
         """
-        return datetime.strftime(dt, "%Y-%m-%dT%H:%M:%S")
+        return datetime.strftime(date, "%Y-%m-%dT%H:%M:%S")
 
     async def fmt_reply(self, event, msg):
         """ Reply to a message event (does not have to be an event) with the message msg
@@ -133,10 +137,11 @@ class CoopBoop:
             with open(clean_image_name, 'wb') as cleaned_image:
                 cleaned_image.write(image.get_file())
         return clean_image_name
- 
+
     def exif_data(self, image_name):
         """ Return a dict of all the known information about the file
         """
+        # pylint: disable=broad-except
         with open(image_name, 'rb') as image:
             image = exif.Image(image)
             if image.has_exif:
@@ -150,8 +155,7 @@ class CoopBoop:
                     except Exception:
                         pass
                 return exif_data
-            else:
-                return None
+            return None
 
     @perm
     async def set_header(self, event):
@@ -202,7 +206,7 @@ class CoopBoop:
         """
         cmd = event.message.raw_text.split(' ')
         if len(cmd) != 2:
-            chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else \
+            chat = event.to_id.chat_id if isinstance(event.to_id, tl.types.PeerChat) else \
                    event.to_id.user_id
         else:
             chat = int(cmd[1])
@@ -215,15 +219,15 @@ class CoopBoop:
                 try:
                     await message.download_media(self.file_download_path)
                     cnt += 1
-                except FloodWaitError as e:
-                    await asyncio.sleep(e.seconds)
+                except errors.FloodWaitError as error:
+                    await asyncio.sleep(error.seconds)
         after = datetime.now()
         diff = (after - before).total_seconds()
         secs = str(int(diff % 60))
         mins = str(int(diff / 60))
         hrrs = str(int(diff / 3600))
         elap = hrrs + ":" + mins + ":" + secs
-        await self.fmt_reply(message, elap + ", " + str(cnt) + " saved until this point.")
+        await self.fmt_reply(event, elap + ", " + str(cnt) + " saved until this point.")
 
     @perm
     async def id_of(self, event):
@@ -255,8 +259,8 @@ class CoopBoop:
             await self.fmt_reply(event, "No matches found for " + name_arg)
         else:
             answer = ""
-            for name, ID in name_pot.items():
-                answer += "> " + name + " --> `" + str(ID) + "`" + '\n'
+            for name, user_id in name_pot.items():
+                answer += "> " + name + " --> `" + str(user_id) + "`" + '\n'
             await self.fmt_reply(event, answer)
 
     @perm
@@ -298,6 +302,7 @@ class CoopBoop:
                 ;activity i 2020-05-30 10203040 100
                 ;activity i 2020-05-30 none all
         """
+        # pylint: disable=too-many-branches
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
 
@@ -306,17 +311,17 @@ class CoopBoop:
             return
         if cmd_len > 1:
             choice = cmd[1][0].lower()
-            dt = None
+            date = None
             results_count = 10
-            if type(event.to_id) is tl.types.PeerChat:
+            if isinstance(event.to_id, tl.types.PeerChat):
                 chat = event.to_id.chat_id
-            elif type(event.to_id) is tl.types.PeerChannel:
+            elif isinstance(event.to_id, tl.types.PeerChannel):
                 chat = event.to_id.channel_id
         if cmd_len > 2:
             if cmd[2].lower() != "none":
-                dt = self.str_to_datetime(cmd[2])
+                date = self.str_to_datetime(cmd[2])
             else:
-                dt = None
+                date = None
         if cmd_len > 3:
             if cmd[3].lower() != "none":
                 chat = int(cmd[3])
@@ -330,7 +335,8 @@ class CoopBoop:
         async for member in self.client.iter_participants(chat):
             members[member.id] = [self.name(member), 0]
 
-        async for msg in self.client.iter_messages(chat, offset_date=dt, reverse=(dt is not None)):
+        async for msg in self.client.iter_messages(chat, offset_date=date, \
+                                                   reverse=(date is not None)):
             if msg.from_id in members:
                 members[msg.from_id][1] += 1
 
@@ -342,8 +348,8 @@ class CoopBoop:
 
         choice = "most" if choice=='a' else "least"
         results = "The " + str(results_count) + " " + choice + " active users"
-        if dt:
-            results += " since " + self.datetime_to_str(dt)
+        if date:
+            results += " since " + self.datetime_to_str(date)
         results += " are:\n"
         for i in range(min(len(sorted_members),results_count)):
             results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + \
@@ -383,8 +389,9 @@ class CoopBoop:
         -Replies when receiving a private message or when "mentioned" in a chat/channel
         -Only replies if the person hasn't gotten dnd'd recently (default 10 mins)
         """
+        # pylint: disable=no-value-for-parameter
         if self.dnd:
-            if type(event.to_id) is tl.types.PeerUser or event.mentioned:
+            if isinstance(event.to_id, tl.types.PeerUser) or event.mentioned:
                 now = datetime.now()
                 sender = event.message.from_id
 
@@ -411,47 +418,44 @@ class CoopBoop:
         -Must provide thumbnailed/uncompressed JPEG/.jpg file (no support for TIFF yet)
         -Command must be the "description"/accompanying message of the uploaded image
         """
+        # pylint: disable=too-many-branches
         cmd = event.message.raw_text.split(' ')
 
         if len(cmd) != 2:
             await self.fmt_reply(event, "Improper syntax for exif!")
-            return
         elif event.message.media is None:
             await self.fmt_reply(event, "No image given!")
-            return
         elif not isinstance(event.message.media, tl.types.MessageMediaDocument):
             await self.fmt_reply(event, "Did not send image as file!")
-            return
         elif event.message.media.document.mime_type != "image/jpeg":
             await self.fmt_reply(event, "This bot only supports JPEG/.jpg")
-            return
-
-        try:
-            image_provided = await event.message.download_media(self.file_download_path)
-        except FloodWaitError as e:
-            await asyncio.sleep(e.seconds)
-
-        if cmd[1] == "clean":
-            clean_image = self.exif_clean(image_provided)
-            if clean_image is None:
-                await self.fmt_reply(event, "Image never had exif data!")
-            else:
-                clean_image_path = os.path.join(self.file_download_path, clean_image)
-                await event.reply(file=clean_image_path, force_document=True)
-                os.remove(image_provided)
-                os.remove(clean_image_path)
-        elif cmd[1] == "data":
-            exif_data = self.exif_data(image_provided)
-            if exif_data is None:
-                await self.fmt_reply(event, "Image never had exif data!")
-            else:
-                accumulator_str = ""
-                for exif_prop, exif_val in exif_data.items():
-                    accumulator_str += f"**{exif_prop}**: {exif_val}\n"
-                await self.fmt_reply(event, accumulator_str)
-                os.remove(image_provided)
         else:
-            await self.fmt_reply(event, "Improper syntax for exif!")
+            try:
+                image_provided = await event.message.download_media(self.file_download_path)
+            except errors.FloodWaitError as error:
+                await asyncio.sleep(error.seconds)
+
+            if cmd[1] == "clean":
+                clean_image = self.exif_clean(image_provided)
+                if clean_image is None:
+                    await self.fmt_reply(event, "Image never had exif data!")
+                else:
+                    clean_image_path = os.path.join(self.file_download_path, clean_image)
+                    await event.reply(file=clean_image_path, force_document=True)
+                    os.remove(image_provided)
+                    os.remove(clean_image_path)
+            elif cmd[1] == "data":
+                exif_data = self.exif_data(image_provided)
+                if exif_data is None:
+                    await self.fmt_reply(event, "Image never had exif data!")
+                else:
+                    accumulator_str = ""
+                    for exif_prop, exif_val in exif_data.items():
+                        accumulator_str += f"**{exif_prop}**: {exif_val}\n"
+                    await self.fmt_reply(event, accumulator_str)
+                    os.remove(image_provided)
+            else:
+                await self.fmt_reply(event, "Improper syntax for exif!")
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
