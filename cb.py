@@ -1,14 +1,27 @@
+"""
+Launch Telethon based Telegram userbot
+"""
+
+
 import asyncio
-import os
-from telethon import TelegramClient, events, tl, errors
 from datetime import datetime
 import json
-import exif
 import types
 import logging
+import os
+import exif
+from telethon import TelegramClient, events, tl, errors
+
 logging.basicConfig(level=logging.INFO)
 
-class cb:
+class CoopBoop:
+    """
+    Driver class for the userbot
+    """
+
+    # pylint: disable=too-many-instance-attributes
+    # pylint: disable=no-self-use
+
     def __init__(self):
         # Load from config file
         with open("config.json", "r") as config_file:
@@ -32,20 +45,23 @@ class cb:
 
         # Set do not disturb to off by default
         self.dnd = False
-        self.dnd_msg = config['dnd_msg'] if config['dnd_msg'] != "None" else None 
+        self.dnd_msg = config['dnd_msg'] if config['dnd_msg'] != "None" else None
         self.dnd_pic = config['dnd_pic'] if config['dnd_pic'] != "None" else None
         self.dnd_tracker = {}
 
         # Start
-        API_id = config['API_id']
-        API_hash = config['API_hash']
+        api_id = config['API_id']
+        api_hash = config['API_hash']
         owner_name = config['owner_name']
-        self.client = TelegramClient(owner_name, API_id, API_hash)
+        self.client = TelegramClient(owner_name, api_id, api_hash)
         print("Bot started")
 
     def perm(wrapped_handler):
         """ Decorator that forces each command to be checked via its name in self.perms{}
         """
+        # pylint: disable=no-self-argument
+        # pylint: disable=not-callable
+        # pylint: disable=no-member
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]['whitelist']
             xauth = self.perms[wrapped_handler.__name__]['blacklist']
@@ -62,19 +78,19 @@ class cb:
                 self.bot_log(person + " denied for " + wrapped_handler.__name__)
         return handler
 
-    def name(self, entity, at=False):
+    def name(self, entity, at_symbol=False):
         """ Get the name of the user in the format of FirstName LastName(@username)
         """
-        if at:
-            at = '@'
+        if at_symbol:
+            at_symbol = '@'
         else:
-            at = ''
+            at_symbol = ''
 
-        if type(entity) is tl.types.User:
+        if isinstance(entity, tl.types.User):
             if not entity.deleted:
                 name = entity.first_name
                 name += ' ' + entity.last_name if entity.last_name else ''
-                name += '(' + at + entity.username + ')' if entity.username else ''
+                name += '(' + at_symbol + entity.username + ')' if entity.username else ''
             else:
                 name = "<Deleted Account>"
         else:
@@ -94,13 +110,13 @@ class cb:
         fmt = "%Y-%m-%d"
         if ':' in time:
             fmt += "T%H:%M:%S"
-        dt = datetime.strptime(time, fmt)
-        return dt
+        date = datetime.strptime(time, fmt)
+        return date
 
-    def datetime_to_str(self, dt):
+    def datetime_to_str(self, date):
         """ Turn a datetime into a string for format "year-month-dayThour:minute:second"
         """
-        return datetime.strftime(dt, "%Y-%m-%dT%H:%M:%S")
+        return datetime.strftime(date, "%Y-%m-%dT%H:%M:%S")
 
     async def fmt_reply(self, event, msg):
         """ Reply to a message event (does not have to be an event) with the message msg
@@ -121,10 +137,11 @@ class cb:
             with open(clean_image_name, 'wb') as cleaned_image:
                 cleaned_image.write(image.get_file())
         return clean_image_name
-    
+
     def exif_data(self, image_name):
         """ Return a dict of all the known information about the file
         """
+        # pylint: disable=broad-except
         with open(image_name, 'rb') as image:
             image = exif.Image(image)
             if image.has_exif:
@@ -138,8 +155,7 @@ class cb:
                     except Exception:
                         pass
                 return exif_data
-            else:
-                return None
+            return None
 
     @perm
     async def set_header(self, event):
@@ -150,7 +166,7 @@ class cb:
         Ex: ;hdr `John's Bot`
         """
         cmd = event.message.text.split(' ')
-        if(len(cmd) < 2):
+        if len(cmd) < 2:
             await self.fmt_reply(event, "Improper syntax for set_header!")
             return
         self.header = ' '.join(cmd[1:])
@@ -181,7 +197,7 @@ class cb:
     async def scrape(self, event):
         """ Scrape (download) all media from a given chat/channel/group
         -Format: ;scrape chatID(optional)
-        -Includes videos, youtube thumbnails, sometimes stickers, compressed and uncompressed photos, etc
+        -Includes videos, youtube thumbnails, sometimes stickers, (un/)compressed photos, etc
         -Replies with details about how long it took and how many media it saved
         -May be useful to get the id of the dialog to scrape fist via ;id_of
 
@@ -189,8 +205,9 @@ class cb:
                 ;scrape 12345678
         """
         cmd = event.message.raw_text.split(' ')
-        if(len(cmd) != 2):
-            chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else event.to_id.user_id
+        if len(cmd) != 2:
+            chat = event.to_id.chat_id if isinstance(event.to_id, tl.types.PeerChat) else \
+                   event.to_id.user_id
         else:
             chat = int(cmd[1])
 
@@ -202,15 +219,15 @@ class cb:
                 try:
                     await message.download_media(self.file_download_path)
                     cnt += 1
-                except FloodWaitError as e:
-                    await asyncio.sleep(e.seconds)
+                except errors.FloodWaitError as error:
+                    await asyncio.sleep(error.seconds)
         after = datetime.now()
         diff = (after - before).total_seconds()
         secs = str(int(diff % 60))
         mins = str(int(diff / 60))
         hrrs = str(int(diff / 3600))
         elap = hrrs + ":" + mins + ":" + secs
-        await self.fmt_reply(message, elap + ", " + str(cnt) + " saved until this point.")
+        await self.fmt_reply(event, elap + ", " + str(cnt) + " saved until this point.")
 
     @perm
     async def id_of(self, event):
@@ -219,13 +236,14 @@ class cb:
         -Goes through every single dialog
         -Replies with list of possible matches by name --> ID
         -Prepends list with "> "
-        -Simply uses a match method of substring (Python's in keyword) of dialog.lower() vs self.name().lower()
+        -Simply uses a match method of substring (Python's in keyword) of dialog.lower() vs
+         self.name().lower()
 
         -Ex:    ;idof john
                 ;idof linux-chat
         """
         cmd = event.message.raw_text.split(' ')
-        if(len(cmd) < 2):
+        if len(cmd) < 2:
             await self.fmt_reply(event, "Improper syntax for ;idof! Need a name!")
             return
 
@@ -241,8 +259,8 @@ class cb:
             await self.fmt_reply(event, "No matches found for " + name_arg)
         else:
             answer = ""
-            for name, ID in name_pot.items():
-                answer += "> " + name + " --> `" + str(ID) + "`" + '\n'
+            for name, user_id in name_pot.items():
+                answer += "> " + name + " --> `" + str(user_id) + "`" + '\n'
             await self.fmt_reply(event, answer)
 
     @perm
@@ -254,7 +272,7 @@ class cb:
         -Ex:    ;name 12345678
         """
         cmd = event.message.raw_text.split(' ')
-        if(len(cmd) < 2):
+        if len(cmd) < 2:
             await self.fmt_reply(event, "Improper syntax for ;name! Need an ID argument!")
             return
 
@@ -270,8 +288,10 @@ class cb:
         """ Return a list of the top 10 most active/inactive members since time provided (if any)
         -Format: ;activity choice date(optional) chatID(optional) results_count(optional)
         -choice         --> active or inactive, can be shortened to a or i
-        -date           --> time in format year-month-day or year-month-dayThour:minute:second, uses UTC, can be none
-        -chatID         --> id of chat you want to check the activity in, can be none, can find chat IDs with ;idof
+        -date           --> time in format year-month-day or year-month-dayThour:minute:second,
+                            uses UTC, can be none
+        -chatID         --> id of chat you want to check the activity in, can be none, can find
+                            chat IDs with ;idof
         -results_count  --> number of results you want, either a number or "all"
 
         -Useful for picking out "lurkers" and other suspicious users
@@ -282,25 +302,26 @@ class cb:
                 ;activity i 2020-05-30 10203040 100
                 ;activity i 2020-05-30 none all
         """
+        # pylint: disable=too-many-branches
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
 
         if cmd_len < 2 or cmd_len > 5:
-            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
+            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type")
             return
         if cmd_len > 1:
             choice = cmd[1][0].lower()
-            dt = None
+            date = None
             results_count = 10
-            if type(event.to_id) is tl.types.PeerChat:
+            if isinstance(event.to_id, tl.types.PeerChat):
                 chat = event.to_id.chat_id
-            elif type(event.to_id) is tl.types.PeerChannel:
+            elif isinstance(event.to_id, tl.types.PeerChannel):
                 chat = event.to_id.channel_id
         if cmd_len > 2:
             if cmd[2].lower() != "none":
-                dt = self.str_to_datetime(cmd[2])
+                date = self.str_to_datetime(cmd[2])
             else:
-                dt = None
+                date = None
         if cmd_len > 3:
             if cmd[3].lower() != "none":
                 chat = int(cmd[3])
@@ -314,7 +335,8 @@ class cb:
         async for member in self.client.iter_participants(chat):
             members[member.id] = [self.name(member), 0]
 
-        async for msg in self.client.iter_messages(chat, offset_date=dt, reverse=(dt is not None)):
+        async for msg in self.client.iter_messages(chat, offset_date=date, \
+                                                   reverse=(date is not None)):
             if msg.from_id in members:
                 members[msg.from_id][1] += 1
 
@@ -326,11 +348,12 @@ class cb:
 
         choice = "most" if choice=='a' else "least"
         results = "The " + str(results_count) + " " + choice + " active users"
-        if dt:
-            results += " since " + self.datetime_to_str(dt)
+        if date:
+            results += " since " + self.datetime_to_str(date)
         results += " are:\n"
         for i in range(min(len(sorted_members),results_count)):
-            results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + " --> " + str(sorted_members[i][1]) + '\n'
+            results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + \
+                       " --> " + str(sorted_members[i][1]) + '\n'
 
         await self.fmt_reply(event, results)
 
@@ -347,16 +370,16 @@ class cb:
         """
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
-        if(cmd_len == 1 or cmd_len > 3):
+        if cmd_len == 1 or cmd_len > 3:
             await self.fmt_reply(event, "Improper syntax for do_not_disturb!")
             return
-        if(cmd[1].lower() == "on"):
+        if cmd[1].lower() == "on":
             self.dnd = True
             await self.fmt_reply(event, "Do not disturb: `Enabled`")
-        elif(cmd[1].lower() == "off"):
+        elif cmd[1].lower() == "off":
             self.dnd = False
             await self.fmt_reply(event, "Do not disturb: `Disabled`")
-        elif(cmd[1].lower() == "set"):
+        elif cmd[1].lower() == "set":
             cmd = ' '.join(cmd[2:])
             self.dnd_msg = cmd
             await self.fmt_reply(event, "Do not disturb message set")
@@ -364,10 +387,11 @@ class cb:
     async def do_not_disturb_responder(self, event):
         """ Helper function for responding to messages when do not disturb is set
         -Replies when receiving a private message or when "mentioned" in a chat/channel
-        -Only replies if the person who mentioned or pm'd hasn't gotten dnd'd recently (default 10 mins)
+        -Only replies if the person hasn't gotten dnd'd recently (default 10 mins)
         """
+        # pylint: disable=no-value-for-parameter
         if self.dnd:
-            if type(event.to_id) is tl.types.PeerUser or event.mentioned:
+            if isinstance(event.to_id, tl.types.PeerUser) or event.mentioned:
                 now = datetime.now()
                 sender = event.message.from_id
 
@@ -394,47 +418,44 @@ class cb:
         -Must provide thumbnailed/uncompressed JPEG/.jpg file (no support for TIFF yet)
         -Command must be the "description"/accompanying message of the uploaded image
         """
+        # pylint: disable=too-many-branches
         cmd = event.message.raw_text.split(' ')
 
         if len(cmd) != 2:
             await self.fmt_reply(event, "Improper syntax for exif!")
-            return
         elif event.message.media is None:
             await self.fmt_reply(event, "No image given!")
-            return
         elif not isinstance(event.message.media, tl.types.MessageMediaDocument):
             await self.fmt_reply(event, "Did not send image as file!")
-            return
         elif event.message.media.document.mime_type != "image/jpeg":
             await self.fmt_reply(event, "This bot only supports JPEG/.jpg")
-            return
-
-        try:
-            image_provided = await event.message.download_media(self.file_download_path)
-        except FloodWaitError as e:
-            await asyncio.sleep(e.seconds)
-
-        if cmd[1] == "clean":
-            clean_image = self.exif_clean(image_provided)
-            if clean_image is None:
-                await self.fmt_reply(event, "Image never had exif data!")
-            else:
-                clean_image_path = os.path.join(self.file_download_path, clean_image)
-                await event.reply(file=clean_image_path, force_document=True)
-                os.remove(image_provided)
-                os.remove(clean_image_path)
-        elif cmd[1] == "data":
-            exif_data = self.exif_data(image_provided)
-            if exif_data is None:
-                await self.fmt_reply(event, "Image never had exif data!")
-            else:
-                accumulator_str = ""
-                for exif_prop, exif_val in exif_data.items():
-                    accumulator_str += f"**{exif_prop}**: {exif_val}\n"
-                await self.fmt_reply(event, accumulator_str)
-                os.remove(image_provided)
         else:
-            await self.fmt_reply(event, "Improper syntax for exif!")
+            try:
+                image_provided = await event.message.download_media(self.file_download_path)
+            except errors.FloodWaitError as error:
+                await asyncio.sleep(error.seconds)
+
+            if cmd[1] == "clean":
+                clean_image = self.exif_clean(image_provided)
+                if clean_image is None:
+                    await self.fmt_reply(event, "Image never had exif data!")
+                else:
+                    clean_image_path = os.path.join(self.file_download_path, clean_image)
+                    await event.reply(file=clean_image_path, force_document=True)
+                    os.remove(image_provided)
+                    os.remove(clean_image_path)
+            elif cmd[1] == "data":
+                exif_data = self.exif_data(image_provided)
+                if exif_data is None:
+                    await self.fmt_reply(event, "Image never had exif data!")
+                else:
+                    accumulator_str = ""
+                    for exif_prop, exif_val in exif_data.items():
+                        accumulator_str += f"**{exif_prop}**: {exif_val}\n"
+                    await self.fmt_reply(event, accumulator_str)
+                    os.remove(image_provided)
+            else:
+                await self.fmt_reply(event, "Improper syntax for exif!")
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
@@ -444,8 +465,8 @@ class cb:
 
     def run(self):
         """ Start the bot
-        -Done here instead of init because of issues with calling async functions from non-async context,
-        requiring the use of run_until_disconnected()
+        -Done here instead of init because of issues with calling async functions from non-async
+         context, requiring the use of run_until_disconnected()
         """
         self.bot_log("Started bot")
 
@@ -460,7 +481,8 @@ class cb:
             self.client.add_event_handler(self.name_of, events.NewMessage(pattern=';name'))
             self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
-            self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage(incoming=True))
+            self.client.add_event_handler(self.do_not_disturb_responder, \
+                                          events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
@@ -469,5 +491,5 @@ class cb:
             self.client.run_until_disconnected()
 
 if __name__ == "__main__":
-    bot = cb()
+    bot = CoopBoop()
     bot.run()
