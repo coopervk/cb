@@ -1,3 +1,8 @@
+"""
+Launch Telethon based Telegram userbot
+"""
+
+
 import asyncio
 from datetime import datetime
 import json
@@ -9,7 +14,13 @@ from telethon import TelegramClient, events, tl, errors
 logging.basicConfig(level=logging.INFO)
 
 class CoopBoop:
+    """
+    Driver class for the userbot
+    """
+
     def __init__(self):
+        # pylint: disable=too-many-instance-attributes
+
         # Load from config file
         with open("config.json", "r") as config_file:
             config = json.load(config_file)
@@ -37,15 +48,16 @@ class CoopBoop:
         self.dnd_tracker = {}
 
         # Start
-        API_id = config['API_id']
-        API_hash = config['API_hash']
+        api_id = config['API_id']
+        api_hash = config['API_hash']
         owner_name = config['owner_name']
-        self.client = TelegramClient(owner_name, API_id, API_hash)
+        self.client = TelegramClient(owner_name, api_id, api_hash)
         print("Bot started")
 
     def perm(wrapped_handler):
         """ Decorator that forces each command to be checked via its name in self.perms{}
         """
+        # pylint: disable=no-self-argument
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]['whitelist']
             xauth = self.perms[wrapped_handler.__name__]['blacklist']
@@ -121,7 +133,7 @@ class CoopBoop:
             with open(clean_image_name, 'wb') as cleaned_image:
                 cleaned_image.write(image.get_file())
         return clean_image_name
-    
+ 
     def exif_data(self, image_name):
         """ Return a dict of all the known information about the file
         """
@@ -256,7 +268,7 @@ class CoopBoop:
         -Ex:    ;name 12345678
         """
         cmd = event.message.raw_text.split(' ')
-        if(len(cmd) < 2):
+        if len(cmd) < 2:
             await self.fmt_reply(event, "Improper syntax for ;name! Need an ID argument!")
             return
 
@@ -465,7 +477,8 @@ class CoopBoop:
             self.client.add_event_handler(self.name_of, events.NewMessage(pattern=';name'))
             self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
-            self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage(incoming=True))
+            self.client.add_event_handler(self.do_not_disturb_responder, \
+                                          events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
