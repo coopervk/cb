@@ -6,7 +6,7 @@ import os
 from telethon import TelegramClient, events, tl, errors
 logging.basicConfig(level=logging.INFO)
 
-class cb:
+class CoopBoop:
     def __init__(self):
         # Load from config file
         with open("config.json", "r") as config_file:
@@ -30,7 +30,7 @@ class cb:
 
         # Set do not disturb to off by default
         self.dnd = False
-        self.dnd_msg = config['dnd_msg'] if config['dnd_msg'] != "None" else None 
+        self.dnd_msg = config['dnd_msg'] if config['dnd_msg'] != "None" else None
         self.dnd_pic = config['dnd_pic'] if config['dnd_pic'] != "None" else None
         self.dnd_tracker = {}
 
@@ -116,7 +116,7 @@ class cb:
         Ex: ;hdr `John's Bot`
         """
         cmd = event.message.text.split(' ')
-        if(len(cmd) < 2):
+        if len(cmd) < 2:
             await self.fmt_reply(event, "Improper syntax for set_header!")
             return
         self.header = ' '.join(cmd[1:])
@@ -147,7 +147,7 @@ class cb:
     async def scrape(self, event):
         """ Scrape (download) all media from a given chat/channel/group
         -Format: ;scrape chatID(optional)
-        -Includes videos, youtube thumbnails, sometimes stickers, compressed and uncompressed photos, etc
+        -Includes videos, youtube thumbnails, sometimes stickers, (un/)compressed photos, etc
         -Replies with details about how long it took and how many media it saved
         -May be useful to get the id of the dialog to scrape fist via ;id_of
 
@@ -155,8 +155,9 @@ class cb:
                 ;scrape 12345678
         """
         cmd = event.message.raw_text.split(' ')
-        if(len(cmd) != 2):
-            chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else event.to_id.user_id
+        if len(cmd) != 2:
+            chat = event.to_id.chat_id if type(event.to_id) is tl.types.PeerChat else \
+                   event.to_id.user_id
         else:
             chat = int(cmd[1])
 
@@ -185,13 +186,14 @@ class cb:
         -Goes through every single dialog
         -Replies with list of possible matches by name --> ID
         -Prepends list with "> "
-        -Simply uses a match method of substring (Python's in keyword) of dialog.lower() vs self.name().lower()
+        -Simply uses a match method of substring (Python's in keyword) of dialog.lower() vs
+         self.name().lower()
 
         -Ex:    ;idof john
                 ;idof linux-chat
         """
         cmd = event.message.raw_text.split(' ')
-        if(len(cmd) < 2):
+        if len(cmd) < 2:
             await self.fmt_reply(event, "Improper syntax for ;idof! Need a name!")
             return
 
@@ -236,8 +238,10 @@ class cb:
         """ Return a list of the top 10 most active/inactive members since time provided (if any)
         -Format: ;activity choice date(optional) chatID(optional) results_count(optional)
         -choice         --> active or inactive, can be shortened to a or i
-        -date           --> time in format year-month-day or year-month-dayThour:minute:second, uses UTC, can be none
-        -chatID         --> id of chat you want to check the activity in, can be none, can find chat IDs with ;idof
+        -date           --> time in format year-month-day or year-month-dayThour:minute:second,
+                            uses UTC, can be none
+        -chatID         --> id of chat you want to check the activity in, can be none, can find
+                            chat IDs with ;idof
         -results_count  --> number of results you want, either a number or "all"
 
         -Useful for picking out "lurkers" and other suspicious users
@@ -252,7 +256,7 @@ class cb:
         cmd_len = len(cmd)
 
         if cmd_len < 2 or cmd_len > 5:
-            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type (active, inactive)")
+            await self.fmt_reply(event, "Improper syntax for ;activity! Need a type")
             return
         if cmd_len > 1:
             choice = cmd[1][0].lower()
@@ -296,7 +300,8 @@ class cb:
             results += " since " + self.datetime_to_str(dt)
         results += " are:\n"
         for i in range(min(len(sorted_members),results_count)):
-            results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + " --> " + str(sorted_members[i][1]) + '\n'
+            results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + \
+                       " --> " + str(sorted_members[i][1]) + '\n'
 
         await self.fmt_reply(event, results)
 
@@ -330,7 +335,7 @@ class cb:
     async def do_not_disturb_responder(self, event):
         """ Helper function for responding to messages when do not disturb is set
         -Replies when receiving a private message or when "mentioned" in a chat/channel
-        -Only replies if the person who mentioned or pm'd hasn't gotten dnd'd recently (default 10 mins)
+        -Only replies if the person hasn't gotten dnd'd recently (default 10 mins)
         """
         if self.dnd:
             if type(event.to_id) is tl.types.PeerUser or event.mentioned:
@@ -360,8 +365,8 @@ class cb:
 
     def run(self):
         """ Start the bot
-        -Done here instead of init because of issues with calling async functions from non-async context,
-        requiring the use of run_until_disconnected()
+        -Done here instead of init because of issues with calling async functions from non-async
+         context, requiring the use of run_until_disconnected()
         """
         self.bot_log("Started bot")
 
@@ -384,5 +389,5 @@ class cb:
             self.client.run_until_disconnected()
 
 if __name__ == "__main__":
-    bot = cb()
+    bot = CoopBoop()
     bot.run()
