@@ -1,6 +1,8 @@
 import asyncio
 from datetime import datetime
 import json
+import exif
+import types
 import logging
 import os
 from telethon import TelegramClient, events, tl, errors
@@ -106,6 +108,38 @@ class CoopBoop:
         msg = self.header + '\n' + msg
         for i in range(0, len(msg), 4096):
             await event.reply(msg[i:i+4096])
+
+    def exif_clean(self, image_name):
+        """ Remove all exif data from the provided image
+        """
+        with open(image_name, 'rb') as image:
+            image = exif.Image(image)
+            if not image.has_exif:
+                return None
+            image.delete_all()
+            clean_image_name = ''.join(image_name.split('.')[:-1]) + "_cleaned.jpg"
+            with open(clean_image_name, 'wb') as cleaned_image:
+                cleaned_image.write(image.get_file())
+        return clean_image_name
+    
+    def exif_data(self, image_name):
+        """ Return a dict of all the known information about the file
+        """
+        with open(image_name, 'rb') as image:
+            image = exif.Image(image)
+            if image.has_exif:
+                exif_data = {}
+                for prop in dir(image):
+                    try:
+                        val = getattr(image, prop)
+                        if prop[0:1] != "_":
+                            if not isinstance(val, types.MethodType):
+                                exif_data[prop] = val
+                    except Exception:
+                        pass
+                return exif_data
+            else:
+                return None
 
     @perm
     async def set_header(self, event):
@@ -357,6 +391,56 @@ class CoopBoop:
 
                     self.dnd_tracker[sender] = now
 
+    @perm
+    async def exif(self, event):
+        """ Remove or return the data from a JPEG/.jpg file.
+        -Format:    ;exif clean
+                    ;exif data
+        -Must provide thumbnailed/uncompressed JPEG/.jpg file (no support for TIFF yet)
+        -Command must be the "description"/accompanying message of the uploaded image
+        """
+        cmd = event.message.raw_text.split(' ')
+
+        if len(cmd) != 2:
+            await self.fmt_reply(event, "Improper syntax for exif!")
+            return
+        elif event.message.media is None:
+            await self.fmt_reply(event, "No image given!")
+            return
+        elif not isinstance(event.message.media, tl.types.MessageMediaDocument):
+            await self.fmt_reply(event, "Did not send image as file!")
+            return
+        elif event.message.media.document.mime_type != "image/jpeg":
+            await self.fmt_reply(event, "This bot only supports JPEG/.jpg")
+            return
+
+        try:
+            image_provided = await event.message.download_media(self.file_download_path)
+        except FloodWaitError as e:
+            await asyncio.sleep(e.seconds)
+
+        if cmd[1] == "clean":
+            clean_image = self.exif_clean(image_provided)
+            if clean_image is None:
+                await self.fmt_reply(event, "Image never had exif data!")
+            else:
+                clean_image_path = os.path.join(self.file_download_path, clean_image)
+                await event.reply(file=clean_image_path, force_document=True)
+                os.remove(image_provided)
+                os.remove(clean_image_path)
+        elif cmd[1] == "data":
+            exif_data = self.exif_data(image_provided)
+            if exif_data is None:
+                await self.fmt_reply(event, "Image never had exif data!")
+            else:
+                accumulator_str = ""
+                for exif_prop, exif_val in exif_data.items():
+                    accumulator_str += f"**{exif_prop}**: {exif_val}\n"
+                await self.fmt_reply(event, accumulator_str)
+                os.remove(image_provided)
+        else:
+            await self.fmt_reply(event, "Improper syntax for exif!")
+
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
         -Should not be set by default, commented out below
@@ -382,6 +466,7 @@ class CoopBoop:
             self.client.add_event_handler(self.activity, events.NewMessage(pattern=';activity'))
             self.client.add_event_handler(self.do_not_disturb, events.NewMessage(pattern=';dnd'))
             self.client.add_event_handler(self.do_not_disturb_responder, events.NewMessage(incoming=True))
+            self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
