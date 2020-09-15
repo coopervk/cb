@@ -313,16 +313,16 @@ class cb:
         """
         cmd = event.message.raw_text.split(' ')
         cmd_len = len(cmd)
-        if(cmd_len == 1 or cmd_len > 3):
+        if cmd_len == 1 or cmd_len > 3:
             await self.fmt_reply(event, "Improper syntax for do_not_disturb!")
             return
-        if(cmd[1].lower() == "on"):
+        if cmd[1].lower() == "on":
             self.dnd = True
             await self.fmt_reply(event, "Do not disturb: `Enabled`")
-        elif(cmd[1].lower() == "off"):
+        elif cmd[1].lower() == "off":
             self.dnd = False
             await self.fmt_reply(event, "Do not disturb: `Disabled`")
-        elif(cmd[1].lower() == "set"):
+        elif cmd[1].lower() == "set":
             cmd = ' '.join(cmd[2:])
             self.dnd_msg = cmd
             await self.fmt_reply(event, "Do not disturb message set")
