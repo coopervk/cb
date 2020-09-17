@@ -473,9 +473,7 @@ class CoopBoop:
             return
 
         method = getattr(getattr(self, command), "__wrapped__")
-        print(f"method: {method}")
-        print(f"dir(method): {dir(method)}")
-
+        await self.fmt_reply(event, help(method))
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
