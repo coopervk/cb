@@ -482,7 +482,7 @@ class CoopBoop:
             command = cmd[1]
             if ';' in command:
                 command = command[1:]
-            if command not in self.perms.keys():
+            if command not in mapping.keys():
                 await self.fmt_reply(event, f"Command {command} does not exist!")
             else:
                 await self.fmt_reply(event, f"{mapping[command].__doc__}")
