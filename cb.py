@@ -10,6 +10,7 @@ import types
 import logging
 import os
 import exif
+import functools
 from telethon import TelegramClient, events, tl, errors
 
 logging.basicConfig(level=logging.INFO)
@@ -62,6 +63,7 @@ class CoopBoop:
         # pylint: disable=no-self-argument
         # pylint: disable=not-callable
         # pylint: disable=no-member
+        @functools.wraps(wrapped_handler)
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]['whitelist']
             xauth = self.perms[wrapped_handler.__name__]['blacklist']
