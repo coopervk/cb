@@ -9,8 +9,8 @@ import json
 import types
 import logging
 import os
-import exif
 import functools
+import exif
 from telethon import TelegramClient, events, tl, errors
 
 logging.basicConfig(level=logging.INFO)
@@ -20,6 +20,7 @@ class CoopBoop:
     """
 
     # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-many-public-methods
     # pylint: disable=no-self-use
 
     def __init__(self):
@@ -498,7 +499,7 @@ class CoopBoop:
             else:
                 await self.fmt_reply(event, f"{mapping[command].__doc__}")
         else:
-            await self.fmt_reply(event, "Improper syntax for help!") 
+            await self.fmt_reply(event, "Improper syntax for help!")
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
