@@ -162,13 +162,10 @@ class CoopBoop:
         mapping = {}
         for event_handler in self.client.list_event_handlers():
             pattern = event_handler[1].pattern
-            method = event_handler[0]
-            if pattern:
+            if pattern is not None:
+                method = event_handler[0]
+                pattern = pattern.__self__.pattern
                 mapping[pattern] = method
-                print(f"pattern: {event_handler[1].pattern}")
-                print(f"dir(pattern): {dir(event_handler[1].pattern)}")
-                print(f"type(pattern): {type(event_handler[1].pattern)}")
-                print(f"The big trick: {event_handler[1].pattern.__self__.pattern}")
         return mapping
 
     @perm
@@ -485,6 +482,7 @@ class CoopBoop:
             return
 
         mapping = await self.map_pattern_to_event_method()
+        print(mapping.items())
         
 
     async def literally_everything(self, event):
