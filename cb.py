@@ -506,7 +506,7 @@ class CoopBoop:
             self.client.add_event_handler(self.do_not_disturb_responder, \
                                           events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
-            self.client.add_event_handler(self.exif, events.NewMessage(pattern=';help'))
+            self.client.add_event_handler(self.help, events.NewMessage(pattern=';help'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
