@@ -165,6 +165,7 @@ class CoopBoop:
             print(f"pattern: {event_handler[1].pattern}")
             print(f"dir(pattern): {dir(event_handler[1].pattern)}")
             print(f"type(pattern): {type(event_handler[1].pattern)}")
+            print(f"The big trick: {event_handler[1].pattern.__self__.pattern}")
         return mapping
 
     @perm
