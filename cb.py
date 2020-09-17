@@ -287,7 +287,8 @@ class CoopBoop:
 
     @perm
     async def activity(self, event):
-        """ Return a list of the top 10 most active/inactive members since time provided (if any)
+        """
+        Return a list of the top 10 most active/inactive members since time provided (if any)
         -Format: ;activity choice date(optional) chatID(optional) results_count(optional)
         -choice         --> active or inactive, can be shortened to a or i
         -date           --> time in format year-month-day or year-month-dayThour:minute:second,
