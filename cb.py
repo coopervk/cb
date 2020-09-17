@@ -161,9 +161,7 @@ class CoopBoop:
     async def map_event_to_pattern(self):
         mapping = {}
         for event_handler in self.client.list_event_handlers():
-            print(event_handler[0])
-            print(dir(event_handler[0]))
-            mapping[event_handler[0].__wrapped__] = event_handler[1].pattern
+            mapping[event_handler[0]] = event_handler[1].pattern
         return mapping
 
     @perm
