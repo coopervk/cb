@@ -482,11 +482,7 @@ class CoopBoop:
             else:
                 await self.fmt_reply(event, f"{mapping[command].__doc__}")
         else:
-            await self.fmt_reply(event, "Improper syntax for help!")
-            return
-
-        print(mapping.items())
-        
+            await self.fmt_reply(event, "Improper syntax for help!") 
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
