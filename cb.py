@@ -472,9 +472,10 @@ class CoopBoop:
             await self.fmt_reply(event, f"Command {command} does not exist!")
             return
 
-        method = getattr(self, command)
+        method = getattr(getattr(self, command), "__wrapped__")
         print(f"method: {method}")
         print(f"dir(method): {dir(method)}")
+
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
