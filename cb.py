@@ -476,6 +476,7 @@ class CoopBoop:
 
         for event in self.client.list_event_handlers():
             print(event)
+            print(type(event))
             print(dir(event))
 
     async def literally_everything(self, event):
