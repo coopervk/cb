@@ -159,6 +159,9 @@ class CoopBoop:
             return None
 
     async def map_pattern_to_event_method(self):
+        """ Get dictionary mapping of commands to the methods they trigger
+        -Commands are specified by setting a pattern when registering an event
+        """
         mapping = {}
         for event_handler in self.client.list_event_handlers():
             pattern = event_handler[1].pattern
@@ -424,8 +427,8 @@ class CoopBoop:
     @perm
     async def exif(self, event):
         """ Remove or return the data from a JPEG/.jpg file.
-        -Format:    ;exif clean
-                    ;exif data
+        -Ex:  ;exif clean
+              ;exif data
         -Must provide thumbnailed/uncompressed JPEG/.jpg file (no support for TIFF yet)
         -Command must be the "description"/accompanying message of the uploaded image
         """
@@ -470,6 +473,12 @@ class CoopBoop:
 
     @perm
     async def help(self, event):
+        """ Print out either the list of commands or the docstring for a provided command
+        -Ex:  ;help
+              ;help exif
+              ;help ;dnd
+        """
+
         cmd = event.message.raw_text.split(' ')
         mapping = await self.map_pattern_to_event_method()
 
