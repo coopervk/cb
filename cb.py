@@ -158,11 +158,10 @@ class CoopBoop:
                 return exif_data
             return None
 
-    async def map_event_to_pattern(self):
+    async def map_pattern_to_event_method(self):
         mapping = {}
         for event_handler in self.client.list_event_handlers():
             mapping[event_handler[0]] = event_handler[1].pattern
-            print(dir(event_handler[1].pattern))
         return mapping
 
     @perm
@@ -478,7 +477,7 @@ class CoopBoop:
             await self.fmt_reply(event, f"Command {command} does not exist!")
             return
 
-        mapping = await self.map_event_to_pattern()
+        mapping = await self.map_pattern_to_event_method()
         print(mapping.items())
 
     async def literally_everything(self, event):
