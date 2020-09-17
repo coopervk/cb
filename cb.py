@@ -474,6 +474,8 @@ class CoopBoop:
     @perm
     async def help(self, event):
         """ Print out either the list of commands or the docstring for a provided command
+        -Format: ;help command_name(optional)
+
         -Ex:  ;help
               ;help exif
               ;help ;dnd
