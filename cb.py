@@ -475,6 +475,7 @@ class CoopBoop:
         await self.fmt_reply(event, method.__doc__)
 
         for event in self.client.list_event_handlers():
+            print(event)
             print(dir(event))
 
     async def literally_everything(self, event):
