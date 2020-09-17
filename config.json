@@ -39,7 +39,10 @@
     "exif": {
       "whitelist": [ "OWNER" ],
       "blacklist": []
-    }
+    },
+    "help": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
   },
   "header": "`CoopBoop`",
   "dnd_msg": "None",
