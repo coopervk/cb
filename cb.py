@@ -469,6 +469,8 @@ class CoopBoop:
         if command not in self.perms.keys():
             await self.fmt_reply(event, f"Command {command} does not exist!")
             return
+
+        print(dir(self))
         
         #for prop in dir(self):
         #    try:
