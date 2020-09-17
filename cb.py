@@ -477,7 +477,7 @@ class CoopBoop:
             command_list = "**Commands:**"
             for command in mapping.keys():
                 command_list += f"- ;{command}\n"
-            self.fmt_reply(event, command_list)
+            await self.fmt_reply(event, command_list)
         elif len(cmd) == 2:
             command = cmd[1]
             if command not in self.perms.keys():
