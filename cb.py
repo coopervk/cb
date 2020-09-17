@@ -164,7 +164,7 @@ class CoopBoop:
             pattern = event_handler[1].pattern
             if pattern is not None:
                 method = event_handler[0]
-                pattern = pattern.__self__.pattern
+                pattern = pattern.__self__.pattern[1:]
                 mapping[pattern] = method
         return mapping
 
