@@ -476,7 +476,7 @@ class CoopBoop:
         if len(cmd) == 1:
             command_list = "**Commands:**"
             for command in mapping.keys():
-                message += f"- ;{command}\n"
+                command_list += f"- ;{command}\n"
             self.fmt_reply(event, command_list)
         elif len(cmd) == 2:
             command = cmd[1]
