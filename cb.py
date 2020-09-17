@@ -158,6 +158,12 @@ class CoopBoop:
                 return exif_data
             return None
 
+    async def map_event_to_pattern(self):
+        mapping = {}
+        for event_handler in self.client.list_event_handlers():
+            mapping[event_handler[0].__wrapped__] = event_handler[1].pattern
+        return mapping
+
     @perm
     async def set_header(self, event):
         """ Set the header of the bot at self.header to all text after ";hdr "
@@ -471,14 +477,8 @@ class CoopBoop:
             await self.fmt_reply(event, f"Command {command} does not exist!")
             return
 
-        method = getattr(getattr(self, command), "__wrapped__")
-        await self.fmt_reply(event, method.__doc__)
-
-        for event in self.client.list_event_handlers():
-            for thing in event:
-                print(thing)
-                print(type(thing))
-                print(dir(thing))
+        mapping = await map_event_to_pattern()
+        print(mapping.items())
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
