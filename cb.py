@@ -471,17 +471,20 @@ class CoopBoop:
     @perm
     async def help(self, event):
         cmd = event.message.raw_text.split(' ')
+        mapping = await self.map_pattern_to_event_method()
 
-        if len(cmd) != 2:
+        if len(cmd) == 1:
+            pass
+        elif len(cmd) == 2:
+            command = cmd[1]
+            if command not in self.perms.keys():
+                await self.fmt_reply(event, f"Command {command} does not exist!")
+            else:
+                await self.fmt_reply(event, f"{mapping[command].__doc__}")
+        else:
             await self.fmt_reply(event, "Improper syntax for help!")
             return
 
-        command = cmd[1]
-        if command not in self.perms.keys():
-            await self.fmt_reply(event, f"Command {command} does not exist!")
-            return
-
-        mapping = await self.map_pattern_to_event_method()
         print(mapping.items())
         
 
