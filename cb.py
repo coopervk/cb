@@ -472,7 +472,7 @@ class CoopBoop:
 
         method = getattr(self, command)
         print(f"method: {method}")
-        print(f"method.__doc__: {method.__doc__}")
+        print(f"dir(method): {dir(method)}")
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
