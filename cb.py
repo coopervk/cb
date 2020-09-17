@@ -477,7 +477,7 @@ class CoopBoop:
             await self.fmt_reply(event, f"Command {command} does not exist!")
             return
 
-        mapping = await map_event_to_pattern()
+        mapping = await self.map_event_to_pattern()
         print(mapping.items())
 
     async def literally_everything(self, event):
