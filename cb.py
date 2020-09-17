@@ -163,7 +163,7 @@ class CoopBoop:
         for event_handler in self.client.list_event_handlers():
             mapping[event_handler[1].pattern] = event_handler[0]
             print(type(event_handler[1].pattern))
-            print(type(event_handler[1].pattern))
+            print(dir(event_handler[1].pattern))
             print(event_handler[1].pattern)
         return mapping
 
