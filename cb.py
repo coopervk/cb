@@ -161,7 +161,7 @@ class CoopBoop:
     async def map_pattern_to_event_method(self):
         mapping = {}
         for event_handler in self.client.list_event_handlers():
-            mapping[event_handler[0]] = event_handler[1].pattern
+            mapping[event_handler[0]] = event_handler[1].pattern.pattern
         return mapping
 
     @perm
@@ -479,6 +479,7 @@ class CoopBoop:
 
         mapping = await self.map_pattern_to_event_method()
         print(mapping.items())
+        
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
