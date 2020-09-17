@@ -471,15 +471,8 @@ class CoopBoop:
             return
 
         method = getattr(self, command)
-        print(method.__doc__)
-        #for prop in dir(self):
-        #    try:
-        #        method = getattr(self, prop)
-        #        if not isinstance(val, types.MethodType):
-        #                exif_dat1a[prop] = val
-        #    except Exception:
-        #        pass
-
+        print(f"method: {method}")
+        print(f"method.__doc__: {method.__doc__}")
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
