@@ -459,7 +459,7 @@ class CoopBoop:
 
     @perm
     async def help(self, event):
-        self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
+        cmd = event.message.raw_text.split(' ')
 
         if len(cmd) != 2:
             await self.fmt_reply(event, "Improper syntax for help!")
