@@ -471,7 +471,7 @@ class CoopBoop:
             return
 
         method = getattr(self, command)
-        print(method.__docstring__)
+        print(method.__doc__)
         #for prop in dir(self):
         #    try:
         #        method = getattr(self, prop)
