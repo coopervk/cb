@@ -161,11 +161,14 @@ class CoopBoop:
     async def map_pattern_to_event_method(self):
         mapping = {}
         for event_handler in self.client.list_event_handlers():
-            mapping[event_handler[1].pattern] = event_handler[0]
-            print(f"pattern: {event_handler[1].pattern}")
-            print(f"dir(pattern): {dir(event_handler[1].pattern)}")
-            print(f"type(pattern): {type(event_handler[1].pattern)}")
-            print(f"The big trick: {event_handler[1].pattern.__self__.pattern}")
+            pattern = event_handler[1].pattern
+            method = event_handler[0]
+            if pattern:
+                mapping[pattern] = method
+                print(f"pattern: {event_handler[1].pattern}")
+                print(f"dir(pattern): {dir(event_handler[1].pattern)}")
+                print(f"type(pattern): {type(event_handler[1].pattern)}")
+                print(f"The big trick: {event_handler[1].pattern.__self__.pattern}")
         return mapping
 
     @perm
