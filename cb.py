@@ -162,6 +162,7 @@ class CoopBoop:
         mapping = {}
         for event_handler in self.client.list_event_handlers():
             mapping[event_handler[0]] = event_handler[1].pattern
+            print(dir(event_handler[1].patter))
         return mapping
 
     @perm
