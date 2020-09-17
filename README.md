@@ -37,6 +37,7 @@ See a more in depth explanation of each function in the associated docstring
 7. ;activity, activity, Find the most or least common posters since a given date. Default 10
 8. ;dnd, do_not_disturb, Enable/disable/set message for do not disturb mode. Defaults to only 1 message per ID in 10 mins to prevent spam
 9. ;exif, exif, Get(data)/remove(clean) the exif data from a provided JPEG/.jpg image
+10. ;help, help, Respond to user with list of commands or help for specified command (docstring)
 
 ### Customization
 
