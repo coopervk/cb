@@ -16,8 +16,7 @@ from telethon import TelegramClient, events, tl, errors
 logging.basicConfig(level=logging.INFO)
 
 class CoopBoop:
-    """
-    Driver class for the userbot
+    """ Driver class for the userbot
     """
 
     # pylint: disable=too-many-instance-attributes
@@ -474,6 +473,9 @@ class CoopBoop:
 
         method = getattr(getattr(self, command), "__wrapped__")
         await self.fmt_reply(event, method.__doc__)
+
+        for task in asyncio.Task.all_tasks():
+            print(task)
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
