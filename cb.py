@@ -474,7 +474,7 @@ class CoopBoop:
         mapping = await self.map_pattern_to_event_method()
 
         if len(cmd) == 1:
-            command_list = "**Commands:**"
+            command_list = "**Commands:**\n"
             for command in mapping.keys():
                 command_list += f"- ;{command}\n"
             await self.fmt_reply(event, command_list)
