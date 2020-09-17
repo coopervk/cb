@@ -480,6 +480,8 @@ class CoopBoop:
             await self.fmt_reply(event, command_list)
         elif len(cmd) == 2:
             command = cmd[1]
+            if ';' in command:
+                command = command[1:]
             if command not in self.perms.keys():
                 await self.fmt_reply(event, f"Command {command} does not exist!")
             else:
