@@ -466,7 +466,7 @@ class CoopBoop:
             return
 
         command = cmd[1]
-        if method not in self.perms.keys():
+        if command not in self.perms.keys():
             await self.fmt_reply(event, f"Command {command} does not exist!")
             return
         
