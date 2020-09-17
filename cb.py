@@ -474,8 +474,8 @@ class CoopBoop:
         method = getattr(getattr(self, command), "__wrapped__")
         await self.fmt_reply(event, method.__doc__)
 
-        for task in asyncio.Task.all_tasks():
-            print(task)
+        for event in self.client.list_event_handlers():
+            print(event)
 
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
