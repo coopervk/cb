@@ -422,7 +422,7 @@ class CoopBoop:
         cmd = event.message.raw_text.split(' ')
 
         if len(cmd) != 2:
-            await self.fmt_reply(event, "Improper syntax for exif!")
+            await self.fmt_reply(event, "improper syntax for exif!")
         elif event.message.media is None:
             await self.fmt_reply(event, "No image given!")
         elif not isinstance(event.message.media, tl.types.MessageMediaDocument):
@@ -457,6 +457,28 @@ class CoopBoop:
             else:
                 await self.fmt_reply(event, "Improper syntax for exif!")
 
+    @perm
+    async def help(self, event):
+            self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
+
+        if len(cmd) != 2:
+            await self.fmt_reply(event, "Improper syntax for help!")
+            return
+
+        command = cmd[1]
+        if method not in self.perms.keys():
+            await self.fmt_reply(event, f"Command {command} does not exist!")
+            return
+        
+        #for prop in dir(self):
+        #    try:
+        #        method = getattr(self, prop)
+        #        if not isinstance(val, types.MethodType):
+        #                exif_dat1a[prop] = val
+        #    except Exception:
+        #        pass
+
+
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
         -Should not be set by default, commented out below
@@ -484,6 +506,7 @@ class CoopBoop:
             self.client.add_event_handler(self.do_not_disturb_responder, \
                                           events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
+            self.client.add_event_handler(self.exif, events.NewMessage(pattern=';help'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
