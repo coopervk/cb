@@ -9,17 +9,18 @@ import json
 import types
 import logging
 import os
+import functools
 import exif
 from telethon import TelegramClient, events, tl, errors
 
 logging.basicConfig(level=logging.INFO)
 
 class CoopBoop:
-    """
-    Driver class for the userbot
+    """ Driver class for the userbot
     """
 
     # pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-many-public-methods
     # pylint: disable=no-self-use
 
     def __init__(self):
@@ -62,6 +63,7 @@ class CoopBoop:
         # pylint: disable=no-self-argument
         # pylint: disable=not-callable
         # pylint: disable=no-member
+        @functools.wraps(wrapped_handler)
         async def handler(self, event):
             auth = self.perms[wrapped_handler.__name__]['whitelist']
             xauth = self.perms[wrapped_handler.__name__]['blacklist']
@@ -156,6 +158,19 @@ class CoopBoop:
                         pass
                 return exif_data
             return None
+
+    async def map_pattern_to_event_method(self):
+        """ Get dictionary mapping of commands to the methods they trigger
+        -Commands are specified by setting a pattern when registering an event
+        """
+        mapping = {}
+        for event_handler in self.client.list_event_handlers():
+            pattern = event_handler[1].pattern
+            if pattern is not None:
+                method = event_handler[0]
+                pattern = pattern.__self__.pattern[1:]
+                mapping[pattern] = method
+        return mapping
 
     @perm
     async def set_header(self, event):
@@ -413,8 +428,8 @@ class CoopBoop:
     @perm
     async def exif(self, event):
         """ Remove or return the data from a JPEG/.jpg file.
-        -Format:    ;exif clean
-                    ;exif data
+        -Ex:  ;exif clean
+              ;exif data
         -Must provide thumbnailed/uncompressed JPEG/.jpg file (no support for TIFF yet)
         -Command must be the "description"/accompanying message of the uploaded image
         """
@@ -422,7 +437,7 @@ class CoopBoop:
         cmd = event.message.raw_text.split(' ')
 
         if len(cmd) != 2:
-            await self.fmt_reply(event, "Improper syntax for exif!")
+            await self.fmt_reply(event, "improper syntax for exif!")
         elif event.message.media is None:
             await self.fmt_reply(event, "No image given!")
         elif not isinstance(event.message.media, tl.types.MessageMediaDocument):
@@ -457,6 +472,35 @@ class CoopBoop:
             else:
                 await self.fmt_reply(event, "Improper syntax for exif!")
 
+    @perm
+    async def help(self, event):
+        """ Print out either the list of commands or the docstring for a provided command
+        -Format: ;help command_name(optional)
+
+        -Ex:  ;help
+              ;help exif
+              ;help ;dnd
+        """
+
+        cmd = event.message.raw_text.split(' ')
+        mapping = await self.map_pattern_to_event_method()
+
+        if len(cmd) == 1:
+            command_list = "**Commands:**\n"
+            for command in mapping.keys():
+                command_list += f"- ;{command}\n"
+            await self.fmt_reply(event, command_list)
+        elif len(cmd) == 2:
+            command = cmd[1]
+            if ';' in command:
+                command = command[1:]
+            if command not in mapping.keys():
+                await self.fmt_reply(event, f"Command {command} does not exist!")
+            else:
+                await self.fmt_reply(event, f"{mapping[command].__doc__}")
+        else:
+            await self.fmt_reply(event, "Improper syntax for help!")
+
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
         -Should not be set by default, commented out below
@@ -484,6 +528,7 @@ class CoopBoop:
             self.client.add_event_handler(self.do_not_disturb_responder, \
                                           events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
+            self.client.add_event_handler(self.help, events.NewMessage(pattern=';help'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
