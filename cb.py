@@ -474,7 +474,10 @@ class CoopBoop:
         mapping = await self.map_pattern_to_event_method()
 
         if len(cmd) == 1:
-            pass
+            command_list = "**Commands:**"
+            for command in mapping.keys():
+                message += f"- ;{command}\n"
+            self.fmt_reply(event, command_list)
         elif len(cmd) == 2:
             command = cmd[1]
             if command not in self.perms.keys():
