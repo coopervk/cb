@@ -470,8 +470,8 @@ class CoopBoop:
             await self.fmt_reply(event, f"Command {command} does not exist!")
             return
 
-        print(dir(self))
-        
+        method = getattr(self, command)
+        print(method.__docstring__)
         #for prop in dir(self):
         #    try:
         #        method = getattr(self, prop)
