@@ -214,7 +214,7 @@ class CoopBoop:
         -Format: ;scrape chatID(optional)
         -Includes videos, youtube thumbnails, sometimes stickers, (un/)compressed photos, etc
         -Replies with details about how long it took and how many media it saved
-        -May be useful to get the id of the dialog to scrape fist via ;id_of
+        -May be useful to get the id of the dialog to scrape fist via ;idof
 
         -Ex:    ;scrape
                 ;scrape 12345678
