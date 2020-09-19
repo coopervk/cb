@@ -13,7 +13,9 @@ import functools
 import exif
 from telethon import TelegramClient, events, tl, errors
 
+
 logging.basicConfig(level=logging.INFO)
+
 
 class CoopBoop:
     """ Driver class for the userbot
@@ -57,6 +59,7 @@ class CoopBoop:
         self.client = TelegramClient(owner_name, api_id, api_hash)
         print("Bot started")
 
+
     def perm(wrapped_handler):
         """ Decorator that forces each command to be checked via its name in self.perms{}
         """
@@ -80,6 +83,7 @@ class CoopBoop:
                 self.bot_log(person + " denied for " + wrapped_handler.__name__)
         return handler
 
+
     def name(self, entity, at_symbol=False):
         """ Get the name of the user in the format of FirstName LastName(@username)
         """
@@ -100,11 +104,13 @@ class CoopBoop:
 
         return name
 
+
     def bot_log(self, log):
         """ Log the string log into the file self.bot_log_file, by default ./bot_log.txt
         """
         self.bot_log_file.write(self.datetime_to_str(datetime.now()) + " --> " + log + '\n')
         self.bot_log_file.flush()
+
 
     def str_to_datetime(self, time):
         """ Turn a string in format "year-month-dayThour:minute:second" into a datetime
@@ -115,10 +121,12 @@ class CoopBoop:
         date = datetime.strptime(time, fmt)
         return date
 
+
     def datetime_to_str(self, date):
         """ Turn a datetime into a string for format "year-month-dayThour:minute:second"
         """
         return datetime.strftime(date, "%Y-%m-%dT%H:%M:%S")
+
 
     async def fmt_reply(self, event, msg):
         """ Reply to a message event (does not have to be an event) with the message msg
@@ -126,6 +134,7 @@ class CoopBoop:
         msg = self.header + '\n' + msg
         for i in range(0, len(msg), 4096):
             await event.reply(msg[i:i+4096])
+
 
     def exif_clean(self, image_name):
         """ Remove all exif data from the provided image
@@ -139,6 +148,7 @@ class CoopBoop:
             with open(clean_image_name, 'wb') as cleaned_image:
                 cleaned_image.write(image.get_file())
         return clean_image_name
+
 
     def exif_data(self, image_name):
         """ Return a dict of all the known information about the file
@@ -159,6 +169,7 @@ class CoopBoop:
                 return exif_data
             return None
 
+
     async def map_pattern_to_event_method(self):
         """ Get dictionary mapping of commands to the methods they trigger
         -Commands are specified by setting a pattern when registering an event
@@ -171,6 +182,7 @@ class CoopBoop:
                 pattern = pattern.__self__.pattern[1:]
                 mapping[pattern] = method
         return mapping
+
 
     @perm
     async def set_header(self, event):
@@ -188,6 +200,7 @@ class CoopBoop:
         await self.fmt_reply(event, "New header set")
         self.bot_log("header set to " + self.header)
 
+
     @perm
     async def shutdown_switch(self, event):
         """ Shutdown the bot
@@ -199,6 +212,7 @@ class CoopBoop:
         self.bot_log_file.close()
         await event.client.disconnect()
 
+
     @perm
     async def source_code(self, event):
         """ Return the link to the repository of this bot
@@ -207,6 +221,7 @@ class CoopBoop:
         Ex: ;src
         """
         await self.fmt_reply(event, "https://github.com/gdynamics/cb")
+
 
     @perm
     async def scrape(self, event):
@@ -244,6 +259,7 @@ class CoopBoop:
         elap = hrrs + ":" + mins + ":" + secs
         await self.fmt_reply(event, elap + ", " + str(cnt) + " saved until this point.")
 
+
     @perm
     async def id_of(self, event):
         """ Get the numerical ID of a chat/channel/group via part of its name
@@ -278,6 +294,7 @@ class CoopBoop:
                 answer += "> " + name + " --> `" + str(user_id) + "`" + '\n'
             await self.fmt_reply(event, answer)
 
+
     @perm
     async def name_of(self, event):
         """ Get the name which corresponds to a given ID
@@ -297,6 +314,7 @@ class CoopBoop:
             await self.fmt_reply(event, name)
         except ValueError:
             await self.fmt_reply(event, "Improper syntax for ;name! Argument was not an ID")
+
 
     @perm
     async def activity(self, event):
@@ -372,6 +390,7 @@ class CoopBoop:
 
         await self.fmt_reply(event, results)
 
+
     @perm
     async def do_not_disturb(self, event):
         """ Turn on or off do not disturb mode or set the do not disturb mode picture
@@ -399,6 +418,7 @@ class CoopBoop:
             self.dnd_msg = cmd
             await self.fmt_reply(event, "Do not disturb message set")
 
+
     async def do_not_disturb_responder(self, event):
         """ Helper function for responding to messages when do not disturb is set
         -Replies when receiving a private message or when "mentioned" in a chat/channel
@@ -424,6 +444,7 @@ class CoopBoop:
                         await event.reply(file=self.dnd_pic)
 
                     self.dnd_tracker[sender] = now
+
 
     @perm
     async def exif(self, event):
@@ -472,6 +493,7 @@ class CoopBoop:
             else:
                 await self.fmt_reply(event, "Improper syntax for exif!")
 
+
     @perm
     async def help(self, event):
         """ Print out either the list of commands or the docstring for a provided command
@@ -501,11 +523,13 @@ class CoopBoop:
         else:
             await self.fmt_reply(event, "Improper syntax for help!")
 
+
     async def literally_everything(self, event):
         """ Displays every single event the bot encounters for debugging or brainstorming
         -Should not be set by default, commented out below
         """
         print("DEBUG:", event)
+
 
     def run(self):
         """ Start the bot
@@ -534,6 +558,7 @@ class CoopBoop:
 
             # Run bot
             self.client.run_until_disconnected()
+
 
 if __name__ == "__main__":
     bot = CoopBoop()
