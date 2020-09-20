@@ -208,17 +208,17 @@ class CoopBoop:
 
         Ex: ;sid
         """
-        # Permissions
+        # Save configuration
         config = {}
         config['owner'] = self.owner 
         config['perms'] = self.perms
         config['header'] = self.header or "None"
         config['dnd_msg'] = self.dnd_msg or "None"
         config['dnd_pic'] = self.dnd_pic or "None"
+        self.bot_log("Saving config")
+        with open("test.json", "w") as config_file:
+            json.load(config, config_file)
 
-        # Load from config file
-        with open("config.json", "r") as config_file:
-            config = json.load(config_file)
         self.bot_log("Shutting down")
         self.bot_log_file.close()
         await event.client.disconnect()
