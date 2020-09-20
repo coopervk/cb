@@ -208,6 +208,32 @@ class CoopBoop:
 
         Ex: ;sid
         """
+        # Permissions
+        config = {}
+        self.owner = config['owner']
+        self.perms = config['perms']
+        for command in self.perms:
+            if self.perms[command]['whitelist'] == [ "OWNER" ]:
+                self.perms[command]['whitelist'] = [ self.owner ]
+
+        # Default message reply header
+        self.header = config['header']
+
+        # Set file to log bot activity to
+        self.bot_log_file = open("./bot_log.txt", 'a')
+
+        # File download location
+        self.file_download_path = "./tmp/"
+
+        # Set do not disturb to off by default
+        self.dnd = False
+        self.dnd_msg = config['dnd_msg'] if config['dnd_msg'] != "None" else None
+        self.dnd_pic = config['dnd_pic'] if config['dnd_pic'] != "None" else None
+        self.dnd_tracker = {}
+
+        # Load from config file
+        with open("config.json", "r") as config_file:
+            config = json.load(config_file)
         self.bot_log("Shutting down")
         self.bot_log_file.close()
         await event.client.disconnect()
