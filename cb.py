@@ -217,7 +217,7 @@ class CoopBoop:
         config['dnd_pic'] = self.dnd_pic or "None"
         self.bot_log("Saving config")
         with open("test.json", "w") as config_file:
-            json.load(config, config_file)
+            json.dump(config, config_file)
 
         self.bot_log("Shutting down")
         self.bot_log_file.close()
