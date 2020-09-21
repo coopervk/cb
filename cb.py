@@ -197,10 +197,11 @@ class CoopBoop:
         config['dnd_msg'] = self.dnd_msg or "None"
         config['dnd_pic'] = self.dnd_pic or "None"
 
-        self.bot_log("Saving config")
+        self.bot_log(f"Saving config to {path}")
         with open(path, "w") as config_file:
             json.dump(config, config_file, indent=4)
-            self.bot_log("Config saved")
+            self.bot_log(f"Config saved to {path}")
+
 
     @perm
     async def set_header(self, event):
