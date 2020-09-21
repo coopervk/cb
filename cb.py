@@ -184,7 +184,7 @@ class CoopBoop:
         return mapping
 
 
-    def save_config(self):
+    def save_config(self, path="config.json"):
         """ Save the current state of the bot to the config file
         """
         config = {}
