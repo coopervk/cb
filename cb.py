@@ -53,8 +53,8 @@ class CoopBoop:
         self.dnd_tracker = {}
 
         # Start
-        self.api_id = config['API_id']
-        self.api_hash = config['API_hash']
+        self.api_id = config['api_id']
+        self.api_hash = config['api_hash']
         self.owner_name = config['owner_name']
         self.client = TelegramClient(owner_name, api_id, api_hash)
         print("Bot started")
@@ -196,8 +196,8 @@ class CoopBoop:
         config['header'] = self.header or "None"
         config['dnd_msg'] = self.dnd_msg or "None"
         config['dnd_pic'] = self.dnd_pic or "None"
-        config['API_id'] = self.api_id 
-        config['API_hash'] = self.api_hash
+        config['api_id'] = self.api_id 
+        config['api_hash'] = self.api_hash
         config['owner_name'] = self.owner_name
 
         self.bot_log(f"Saving config to {path}")
