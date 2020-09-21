@@ -53,10 +53,10 @@ class CoopBoop:
         self.dnd_tracker = {}
 
         # Start
-        api_id = config['API_id']
-        api_hash = config['API_hash']
-        owner_name = config['owner_name']
-        self.client = TelegramClient(owner_name, api_id, api_hash)
+        self.api_id = config['api_id']
+        self.api_hash = config['api_hash']
+        self.owner_name = config['owner_name']
+        self.client = TelegramClient(self.owner_name, self.api_id, self.api_hash)
         print("Bot started")
 
 
@@ -184,6 +184,28 @@ class CoopBoop:
         return mapping
 
 
+    def save_config(self, path="config.json"):
+        """ Save the current state of the bot to the config file
+        -Take extra care as to where you call this.
+        -Don't hand it off to user input EVER: arbitrary file overwrite
+        """
+        config = {}
+
+        config['owner'] = self.owner
+        config['perms'] = self.perms
+        config['header'] = self.header or "None"
+        config['dnd_msg'] = self.dnd_msg or "None"
+        config['dnd_pic'] = self.dnd_pic or "None"
+        config['api_id'] = self.api_id 
+        config['api_hash'] = self.api_hash
+        config['owner_name'] = self.owner_name
+
+        self.bot_log(f"Saving config to {path}")
+        with open(path, "w") as config_file:
+            json.dump(config, config_file, indent=4)
+            self.bot_log(f"Config saved to {path}")
+
+
     @perm
     async def set_header(self, event):
         """ Set the header of the bot at self.header to all text after ";hdr "
@@ -208,6 +230,7 @@ class CoopBoop:
 
         Ex: ;sid
         """
+        self.save_config()
         self.bot_log("Shutting down")
         self.bot_log_file.close()
         await event.client.disconnect()

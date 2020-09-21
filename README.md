@@ -24,6 +24,8 @@ Currently, you must update it manually. Generally, it's best to stick with self.
 
 You can `tail -f bot_log.txt` to watch bot run in real time
 
+For the function save_config, never pass user input as the arg. This could result in arbitrary file overwrite.
+
 ### Commands
 See a more in depth explanation of each function in the associated docstring
 
