@@ -186,6 +186,8 @@ class CoopBoop:
 
     def save_config(self, path="config.json"):
         """ Save the current state of the bot to the config file
+        -Take extra care as to where you call this.
+        -Don't hand it off to user input EVER: arbitrary file overwrite
         """
         config = {}
 
@@ -196,7 +198,7 @@ class CoopBoop:
         config['dnd_pic'] = self.dnd_pic or "None"
 
         self.bot_log("Saving config")
-        with open("test.json", "w") as config_file:
+        with open(path, "w") as config_file:
             json.dump(config, config_file, indent=4)
             self.bot_log("Config saved")
 
