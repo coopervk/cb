@@ -191,7 +191,7 @@ class CoopBoop:
         """
         config = {}
 
-        config['owner'] = self.owner 
+        config['owner'] = self.owner
         config['perms'] = self.perms
         config['header'] = self.header or "None"
         config['dnd_msg'] = self.dnd_msg or "None"
