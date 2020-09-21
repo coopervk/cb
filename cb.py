@@ -184,6 +184,22 @@ class CoopBoop:
         return mapping
 
 
+    def save_config(self):
+        """ Save the current state of the bot to the config file
+        """
+        config = {}
+
+        config['owner'] = self.owner 
+        config['perms'] = self.perms
+        config['header'] = self.header or "None"
+        config['dnd_msg'] = self.dnd_msg or "None"
+        config['dnd_pic'] = self.dnd_pic or "None"
+
+        self.bot_log("Saving config")
+        with open("test.json", "w") as config_file:
+            json.dump(config, config_file, indent=4)
+            self.bot_log("Config saved")
+
     @perm
     async def set_header(self, event):
         """ Set the header of the bot at self.header to all text after ";hdr "
@@ -208,17 +224,7 @@ class CoopBoop:
 
         Ex: ;sid
         """
-        # Save configuration
-        config = {}
-        config['owner'] = self.owner 
-        config['perms'] = self.perms
-        config['header'] = self.header or "None"
-        config['dnd_msg'] = self.dnd_msg or "None"
-        config['dnd_pic'] = self.dnd_pic or "None"
-        self.bot_log("Saving config")
-        with open("test.json", "w") as config_file:
-            json.dump(config, config_file, indent=4)
-
+        self.save_config()
         self.bot_log("Shutting down")
         self.bot_log_file.close()
         await event.client.disconnect()
