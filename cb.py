@@ -564,8 +564,8 @@ class CoopBoop:
             await self.fmt_reply(event, "Invalid option!")
             return
 
-        commands = await self.map_pattern_to_event_method()
-        commands = commands.keys()
+        funcs = await self.map_pattern_to_event_method()
+        commands = funcs.keys()
 
         if opt == 'p':
             # ;perman p
@@ -592,7 +592,7 @@ class CoopBoop:
                             accum_str += f"**{command}**: blacklisted\n"
                 elif cmd[2] in commands:
                     command = cmd[2]
-                    print(commands)
+                    print(funcs)
                     accum_str += f"**{command}**\n"
                     whitelist = ', '.join(str(x) for x in self.perms[command]['whitelist'])
                     accum_str += f"whitelist: {whitelist}\n"
