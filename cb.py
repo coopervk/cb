@@ -550,7 +550,7 @@ class CoopBoop:
 
 
     @perm
-    async def perman(self, event):
+    async def manage_permissions(self, event):
         """
         """
         cmd = event.message.raw_text.split(' ')
@@ -672,7 +672,7 @@ class CoopBoop:
                                           events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
             self.client.add_event_handler(self.help, events.NewMessage(pattern=';help'))
-            self.client.add_event_handler(self.help, events.NewMessage(pattern=';perman'))
+            self.client.add_event_handler(self.manage_permissions, events.NewMessage(pattern=';perman'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
