@@ -593,7 +593,7 @@ class CoopBoop:
                 elif cmd[2] in commands:
                     command = cmd[2]
                     print(funcs)
-                    print(funcs[command])
+                    print(funcs[command].__name__)
                     accum_str += f"**{command}**\n"
                     whitelist = ', '.join(str(x) for x in self.perms[command]['whitelist'])
                     accum_str += f"whitelist: {whitelist}\n"
