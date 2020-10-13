@@ -552,11 +552,11 @@ class CoopBoop:
         """
         cmd = event.message.raw_text.split(' ')
 
-        if len(cmd) == 2:
+        if len(cmd) == 3:
             # ;perman p uid
             # ;perman p command
             pass
-        elif len(cmd) == 3:
+        elif len(cmd) == 4:
             # ;perman + uid command
             # ;perman - uid command
             pass
