@@ -607,15 +607,15 @@ class CoopBoop:
         else:
             # ;perman + uid command
             # ;perman - uid command
-            if not cmd[3].isdigit() and cmd[3] != 'ALL':
+            if not cmd[2].isdigit() and cmd[2] != 'ALL':
                 await self.fmt_reply(event, "Invalid UID!")
                 return
-            uid = cmd[3]
+            uid = cmd[2]
 
-            if cmd[4] not in commands and cmd[4] != 'ALL':
+            if cmd[3] not in commands and cmd[3] != 'ALL':
                 await self.fmt_reply(event, "Invalid command!")
                 return
-            command = cmd[4]
+            command = cmd[3]
 
             if uid == 'ALL' and command == 'ALL':
                 await self.fmt_reply(event, "Cannot manage all permissions for all commands at once!")
