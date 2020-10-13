@@ -640,6 +640,7 @@ class CoopBoop:
                 # Special case: Check if UID already in whitelist (don't have it twice)
                 # Remove from blacklist if present
                 # Add to whitelist
+                pass
 
 
     async def literally_everything(self, event):
