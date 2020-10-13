@@ -582,16 +582,16 @@ class CoopBoop:
                     accum_str += '\n'
                 await self.fmt_reply(event, accum_str)
             elif len(cmd) == 3:
-                if cmd[3].isdigit():
-                    uid = int(cmd[3])
+                if cmd[2].isdigit():
+                    uid = int(cmd[2])
                     accum_str = ""
                     for command in self.perms.keys():
                         if uid in self.perms[command]['whitelist']:
                             accum_str += f"**{command}**: whitelisted\n"
                         if uid in self.perms[command]['blacklist']:
                             accum_str += f"**{command}**: blacklisted\n"
-                elif cmd[3] in commands:
-                    command = cmd[3]
+                elif cmd[2] in commands:
+                    command = cmd[2]
                     accum_str += f"**{command}**\n"
                     whitelist = ', '.join(str(x) for x in self.perms[command]['whitelist'])
                     accum_str += f"whitelist: {whitelist}\n"
