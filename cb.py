@@ -566,23 +566,41 @@ class CoopBoop:
 
         commands = await self.map_pattern_to_event_method().keys()
 
+            if self.perms[command]['whitelist'] == [ "OWNER" ]:
         if opt == 'p':
             # ;perman p
             # ;perman p uid
             # ;perman p command
+            accum_str = ""
             if len(cmd) == 2:
-                # Print blacklist & whitelist for all commands
-                pass
+                for command in self.perms.keys():
+                    accum_str += f"**{command}**\n"
+                    whitelist = command['whitelist'].join(', ')
+                    accum_str += f"whitelist: {whitelist}"
+                    blacklist = command['blacklist'].join(', ')
+                    accum_str += f"blacklist: {blacklist}"
+                    accum_str += '\n'
+                await self.fmt_reply(event, accum_str)
             elif len(cmd) == 3:
                 if cmd[3].isdigit():
-                    # Print permissions for all commands user is bl or wl
-                    pass
+                    uid = cmd[3]
+                    accum_str = ""
+                    for command in self.perms.keys():
+                        if uid in command['whitelist']:
+                            accum_str += f"**{command}**: whitelisted"
+                        if uid in command['blacklist']:
+                            accum_str += f"**{command}**: blacklisted"
                 elif cmd[3] in commands:
-                    # Print bl & wl for command
-                    pass
+                    command = cmd[3]
+                    accum_str += f"**{command}**\n"
+                    whitelist = command['whitelist'].join(', ')
+                    accum_str += f"whitelist: {whitelist}"
+                    blacklist = command['blacklist'].join(', ')
+                    accum_str += f"blacklist: {blacklist}"
                 else:
                     await self.fmt_reply(event, "Invalid UID/command!")
                     return
+                await self.fmt_reply(event, accum_str)
             else:
                 await self.fmt_reply(event, "Improper syntax for perman!")
                 return
