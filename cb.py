@@ -564,7 +564,8 @@ class CoopBoop:
             await self.fmt_reply(event, "Invalid option!")
             return
 
-        commands = await self.map_pattern_to_event_method().keys()
+        commands = await self.map_pattern_to_event_method()
+        commands = commands.keys()
 
         if opt == 'p':
             # ;perman p
