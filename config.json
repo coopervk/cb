@@ -43,6 +43,11 @@
     "help": {
       "whitelist": [ "OWNER" ],
       "blacklist": []
+    },
+    "manage_permissions": {
+      "whitelist": [ "OWNER" ],
+      "blacklist": []
+    }
   },
   "header": "`CoopBoop`",
   "dnd_msg": "None",
