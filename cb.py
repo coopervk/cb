@@ -526,7 +526,6 @@ class CoopBoop:
               ;help exif
               ;help ;dnd
         """
-
         cmd = event.message.raw_text.split(' ')
         mapping = await self.map_pattern_to_event_method()
 
@@ -543,6 +542,24 @@ class CoopBoop:
                 await self.fmt_reply(event, f"Command {command} does not exist!")
             else:
                 await self.fmt_reply(event, f"{mapping[command].__doc__}")
+        else:
+            await self.fmt_reply(event, "Improper syntax for help!")
+
+
+    @perm
+    async def perman(self, event):
+        """
+        """
+        cmd = event.message.raw_text.split(' ')
+
+        if len(cmd) == 2:
+            # ;perman p uid
+            # ;perman p command
+            pass
+        elif len(cmd) == 3:
+            # ;perman + uid command
+            # ;perman - uid command
+            pass
         else:
             await self.fmt_reply(event, "Improper syntax for help!")
 
@@ -576,6 +593,7 @@ class CoopBoop:
                                           events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
             self.client.add_event_handler(self.help, events.NewMessage(pattern=';help'))
+            self.client.add_event_handler(self.help, events.NewMessage(pattern=';perman'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
