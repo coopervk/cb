@@ -540,10 +540,13 @@ class CoopBoop:
                 command = command[1:]
             if command not in mapping.keys():
                 await self.fmt_reply(event, f"Command {command} does not exist!")
+                return
             else:
                 await self.fmt_reply(event, f"{mapping[command].__doc__}")
+                return
         else:
             await self.fmt_reply(event, "Improper syntax for help!")
+            return
 
 
     @perm
@@ -552,16 +555,74 @@ class CoopBoop:
         """
         cmd = event.message.raw_text.split(' ')
 
-        if len(cmd) == 3:
+        if len(cmd) < 2 or len(cmd) > 4:
+            await self.fmt_reply(event, "Improper syntax for perman!")
+            return
+
+        opt = cmd[1]
+        if opt not in ('+', '-', 'p'):
+            await self.fmt_reply(event, "Invalid option!")
+            return
+
+        commands = await self.map_pattern_to_event_method().keys()
+
+        if opt == 'p':
+            # ;perman p
             # ;perman p uid
             # ;perman p command
-            pass
-        elif len(cmd) == 4:
+            if len(cmd) == 2:
+                # Print blacklist & whitelist for all commands
+                pass
+            elif len(cmd) == 3:
+                if cmd[3].isdigit():
+                    # Print permissions for all commands user is bl or wl
+                    pass
+                elif cmd[3] in commands:
+                    # Print bl & wl for command
+                    pass
+                else:
+                    await self.fmt_reply(event, "Invalid UID/command!")
+                    return
+            else:
+                await self.fmt_reply(event, "Improper syntax for perman!")
+                return
+        else:
             # ;perman + uid command
             # ;perman - uid command
-            pass
-        else:
-            await self.fmt_reply(event, "Improper syntax for help!")
+            if not cmd[3].isdigit() and cmd[3] != 'ALL':
+                await self.fmt_reply(event, "Invalid UID!")
+                return
+            uid = cmd[3]
+
+            if cmd[4] not in commands and cmd[4] != 'ALL':
+                await self.fmt_reply(event, "Invalid command!")
+                return
+            command = cmd[4]
+
+            if uid == 'ALL' and command == 'ALL':
+                await self.fmt_reply(event, "Cannot manage all permissions for all commands at once!")
+                return
+
+            # Meta: There should be cases where you can have both ALL and UIDs in whitelist in the
+            # case of switching back and forth between commands being available to the general
+            # public and a group of trusted people
+
+            if opt == '-':
+                # Blacklist UID(s)
+                # Special case: For ALL UID case, if wl contains ALL, just remove ALL
+                # Special case: For ALL UID case, if wl does not contain ALL, set whitelist to
+                # just owner of bot, but don't empty blacklist (don't want to lose state if temporary)
+                # Special case: Don't remove owner's permissions from anything
+                # Special case: Check if UID already in blacklist (don't have it twice)
+                # Remove from whitelist if whitelist is not ALL
+                # Add to blacklist if whitelist is ALL
+                pass
+
+            if opt == '+':
+                # Whitelist UID(s)
+                # Special case: Check if UID already in whitelist (don't have it twice)
+                # Remove from blacklist if present
+                # Add to whitelist
 
 
     async def literally_everything(self, event):
