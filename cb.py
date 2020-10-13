@@ -575,9 +575,9 @@ class CoopBoop:
             if len(cmd) == 2:
                 for command in self.perms.keys():
                     accum_str += f"**{command}**\n"
-                    whitelist = command['whitelist'].join(', ')
+                    whitelist = ', '.join(command['whitelist'])
                     accum_str += f"whitelist: {whitelist}"
-                    blacklist = command['blacklist'].join(', ')
+                    blacklist = ', '.join(command['blacklist'])
                     accum_str += f"blacklist: {blacklist}"
                     accum_str += '\n'
                 await self.fmt_reply(event, accum_str)
@@ -593,9 +593,9 @@ class CoopBoop:
                 elif cmd[3] in commands:
                     command = cmd[3]
                     accum_str += f"**{command}**\n"
-                    whitelist = command['whitelist'].join(', ')
+                    whitelist = ', '.join(command['whitelist'])
                     accum_str += f"whitelist: {whitelist}"
-                    blacklist = command['blacklist'].join(', ')
+                    blacklist = ', '.join(command['blacklist'])
                     accum_str += f"blacklist: {blacklist}"
                 else:
                     await self.fmt_reply(event, "Invalid UID/command!")
