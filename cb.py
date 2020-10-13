@@ -566,7 +566,6 @@ class CoopBoop:
 
         commands = await self.map_pattern_to_event_method().keys()
 
-            if self.perms[command]['whitelist'] == [ "OWNER" ]:
         if opt == 'p':
             # ;perman p
             # ;perman p uid
