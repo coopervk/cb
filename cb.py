@@ -577,13 +577,13 @@ class CoopBoop:
                     accum_str += f"**{command}**\n"
                     whitelist = []
                     for uid in self.perms[command]['whitelist']:
-                        user = await.self.client.get_entity(uid)
+                        user = await self.client.get_entity(uid)
                         whitelist.append(self.name(user) + f"({uid})")
                     whitelist = ', '.join(whitelist)
                     accum_str += f"whitelist: {whitelist}\n"
                     blacklist = []
                     for uid in self.perms[command]['blacklist']:
-                        user = await.self.client.get_entity(uid)
+                        user = await self.client.get_entity(uid)
                         blacklist.append(self.name(user) + f"({uid})")
                     blacklist = ', '.join(blacklist)
                     accum_str += f"blacklist: {blacklist}\n"
@@ -604,13 +604,13 @@ class CoopBoop:
                     accum_str += f"**{command}**\n"
                     whitelist = []
                     for uid in self.perms[command]['whitelist']:
-                        user = await.self.client.get_entity(uid)
+                        user = await self.client.get_entity(uid)
                         whitelist.append(self.name(user) + f"({uid})")
                     whitelist = ', '.join(whitelist)
                     accum_str += f"whitelist: {whitelist}\n"
                     blacklist = []
                     for uid in self.perms[command]['blacklist']:
-                        user = await.self.client.get_entity(uid)
+                        user = await self.client.get_entity(uid)
                         blacklist.append(self.name(user) + f"({uid})")
                     blacklist = ', '.join(blacklist)
                     accum_str += f"blacklist: {blacklist}\n"
