@@ -34,8 +34,8 @@ class CoopBoop:
         self.owner = config['owner']
         self.perms = config['perms']
         for command in self.perms:
-            if self.perms[command]['whitelist'] == [ "OWNER" ]:
-                self.perms[command]['whitelist'] = [ self.owner ]
+            if self.perms[command]['whitelist'] == ["OWNER"]:
+                self.perms[command]['whitelist'] = [self.owner]
 
         # Default message reply header
         self.header = config['header']
@@ -397,17 +397,17 @@ class CoopBoop:
                 members[msg.from_id][1] += 1
 
         sorted_members = members.values()
-        sorted_members = sorted(sorted_members, key=lambda l:l[1], reverse=choice == 'a')
+        sorted_members = sorted(sorted_members, key=lambda l: l[1], reverse=choice == 'a')
 
         if results_count == "all":
             results_count = len(sorted_members)
 
-        choice = "most" if choice=='a' else "least"
+        choice = "most" if choice == 'a' else "least"
         results = "The " + str(results_count) + " " + choice + " active users"
         if date:
             results += " since " + self.datetime_to_str(date)
         results += " are:\n"
-        for i in range(min(len(sorted_members),results_count)):
+        for i in range(min(len(sorted_members), results_count)):
             results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + \
                        " --> " + str(sorted_members[i][1]) + '\n'
 
@@ -639,7 +639,8 @@ class CoopBoop:
             command = funcs[cmd[3]].__name__ if cmd[3] != 'ALL' else 'ALL'
 
             if uid == 'ALL' and command == 'ALL':
-                await self.fmt_reply(event, "Cannot manage all permissions for all commands at once!")
+                await self.fmt_reply(event, \
+                                     "Cannot manage all permissions for all commands at once!")
                 return
 
             # Meta: There should be cases where you can have both ALL and UIDs in whitelist in the
@@ -706,7 +707,8 @@ class CoopBoop:
                                           events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
             self.client.add_event_handler(self.help, events.NewMessage(pattern=';help'))
-            self.client.add_event_handler(self.manage_permissions, events.NewMessage(pattern=';perman'))
+            self.client.add_event_handler(self.manage_permissions, \
+                                          events.NewMessage(pattern=';perman'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 
