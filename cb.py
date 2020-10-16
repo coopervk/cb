@@ -636,7 +636,7 @@ class CoopBoop:
                     else:
                         self.perms[command]['whitelist'] = self.owner
                 else:
-                    blacklist_commands = [command] if command == 'ALL' else self.perms.keys()
+                    blacklist_commands = self.perm.keys() if command == 'ALL' else [command]
                     for command_demotion in blacklist_commands:
                         if uid in self.perms[command_demotion]['whitelist']:
                             self.perms[command_demotion]['whitelist'].remove(uid)
