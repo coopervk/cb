@@ -34,8 +34,8 @@ class CoopBoop:
         self.owner = config['owner']
         self.perms = config['perms']
         for command in self.perms:
-            if self.perms[command]['whitelist'] == [ "OWNER" ]:
-                self.perms[command]['whitelist'] = [ self.owner ]
+            if self.perms[command]['whitelist'] == ["OWNER"]:
+                self.perms[command]['whitelist'] = [self.owner]
 
         # Default message reply header
         self.header = config['header']
@@ -397,17 +397,17 @@ class CoopBoop:
                 members[msg.from_id][1] += 1
 
         sorted_members = members.values()
-        sorted_members = sorted(sorted_members, key=lambda l:l[1], reverse=choice == 'a')
+        sorted_members = sorted(sorted_members, key=lambda l: l[1], reverse=choice == 'a')
 
         if results_count == "all":
             results_count = len(sorted_members)
 
-        choice = "most" if choice=='a' else "least"
+        choice = "most" if choice == 'a' else "least"
         results = "The " + str(results_count) + " " + choice + " active users"
         if date:
             results += " since " + self.datetime_to_str(date)
         results += " are:\n"
-        for i in range(min(len(sorted_members),results_count)):
+        for i in range(min(len(sorted_members), results_count)):
             results += "{:2d}".format(i+1) + ". " + sorted_members[i][0] + \
                        " --> " + str(sorted_members[i][1]) + '\n'
 
@@ -526,7 +526,6 @@ class CoopBoop:
               ;help exif
               ;help ;dnd
         """
-
         cmd = event.message.raw_text.split(' ')
         mapping = await self.map_pattern_to_event_method()
 
@@ -545,6 +544,150 @@ class CoopBoop:
                 await self.fmt_reply(event, f"{mapping[command].__doc__}")
         else:
             await self.fmt_reply(event, "Improper syntax for help!")
+
+
+    @perm
+    async def manage_permissions(self, event):
+        """ Modify or print the permissions for bot commands
+        -Format: ;perman p (command/uid)
+                 ;perman (-/+) (command/ALL) (uid/ALL)
+
+        -Ex:  ;perman p
+              ;perman p idof
+              ;perman p 123456789
+
+              ;perman - 123456789 src
+              ;perman + 123456789 idof
+              ;perman + ALL help
+              ;perman - src ALL
+        """
+        # pylint: disable=too-many-locals
+        # pylint: disable=too-many-return-statements
+        # pylint: disable=too-many-branches
+        # pylint: disable=too-many-statements
+        cmd = event.message.raw_text.split(' ')
+
+        if len(cmd) < 2 or len(cmd) > 4:
+            await self.fmt_reply(event, "Improper syntax for perman!")
+            return
+
+        opt = cmd[1]
+        if opt not in ('+', '-', 'p'):
+            await self.fmt_reply(event, "Invalid option!")
+            return
+
+        funcs = await self.map_pattern_to_event_method()
+        commands = funcs.keys()
+
+        if opt == 'p':
+            # ;perman p
+            # ;perman p uid
+            # ;perman p command
+            accum_str = ""
+            if len(cmd) == 2:
+                for command in self.perms.keys():
+                    accum_str += f"**{command}**\n"
+                    whitelist = []
+                    for uid in self.perms[command]['whitelist']:
+                        if uid == 'ALL':
+                            whitelist.append(uid)
+                        else:
+                            user = await self.client.get_entity(uid)
+                            whitelist.append(self.name(user) + f"({uid})")
+                    whitelist = ', '.join(whitelist)
+                    accum_str += f"whitelist: {whitelist}\n"
+                    blacklist = []
+                    for uid in self.perms[command]['blacklist']:
+                        user = await self.client.get_entity(uid)
+                        blacklist.append(self.name(user) + f"({uid})")
+                    blacklist = ', '.join(blacklist)
+                    accum_str += f"blacklist: {blacklist}\n"
+                    accum_str += '\n'
+                await self.fmt_reply(event, accum_str)
+            elif len(cmd) == 3:
+                if cmd[2].isdigit():
+                    uid = int(cmd[2])
+                    accum_str = ""
+                    for command in self.perms.keys():
+                        if uid in self.perms[command]['whitelist']:
+                            accum_str += f"**{command}**: whitelisted\n"
+                        if uid in self.perms[command]['blacklist']:
+                            accum_str += f"**{command}**: blacklisted\n"
+                elif cmd[2] in commands:
+                    command = cmd[2]
+                    command = funcs[command].__name__
+                    accum_str += f"**{command}**\n"
+                    whitelist = []
+                    for uid in self.perms[command]['whitelist']:
+                        if uid == 'ALL':
+                            whitelist.append(uid)
+                        else:
+                            user = await self.client.get_entity(uid)
+                            whitelist.append(self.name(user) + f"({uid})")
+                    whitelist = ', '.join(whitelist)
+                    accum_str += f"whitelist: {whitelist}\n"
+                    blacklist = []
+                    for uid in self.perms[command]['blacklist']:
+                        user = await self.client.get_entity(uid)
+                        blacklist.append(self.name(user) + f"({uid})")
+                    blacklist = ', '.join(blacklist)
+                    accum_str += f"blacklist: {blacklist}\n"
+                else:
+                    await self.fmt_reply(event, "Invalid UID/command!")
+                    return
+                await self.fmt_reply(event, accum_str)
+            else:
+                await self.fmt_reply(event, "Improper syntax for perman!")
+                return
+        else:
+            if not cmd[2].isdigit() and cmd[2] != 'ALL':
+                await self.fmt_reply(event, "Invalid UID!")
+                return
+            uid = 'ALL' if cmd[2] == 'ALL' else int(cmd[2])
+
+            if cmd[3] not in commands and cmd[3] != 'ALL':
+                await self.fmt_reply(event, "Invalid command!")
+                return
+            command = funcs[cmd[3]].__name__ if cmd[3] != 'ALL' else 'ALL'
+
+            if uid == 'ALL' and command == 'ALL':
+                await self.fmt_reply(event, \
+                                     "Cannot manage all permissions for all commands at once!")
+                return
+
+            # Meta: There should be cases where you can have both ALL and UIDs in whitelist in the
+            # case of switching back and forth between commands being available to the general
+            # public and a group of trusted people
+
+            # ;perman + uid command
+            # ;perman - uid command
+            if opt == '-':
+                if uid == self.owner:
+                    await self.fmt_reply(event, "Cannot take permissions away from owner!")
+                    return
+                if uid == 'ALL':
+                    if 'ALL' in self.perms[command]['whitelist']:
+                        self.perms[command]['whitelist'].remove('ALL')
+                    else:
+                        self.perms[command]['whitelist'] = [self.owner]
+                else:
+                    blacklist_commands = self.perms.keys() if command == 'ALL' else [command]
+                    for command_demotion in blacklist_commands:
+                        if uid in self.perms[command_demotion]['whitelist']:
+                            self.perms[command_demotion]['whitelist'].remove(uid)
+                        if uid not in self.perms[command_demotion]['blacklist']:
+                            self.perms[command_demotion]['blacklist'].append(uid)
+            if opt == '+':
+                if uid == 'ALL':
+                    if 'ALL' not in self.perms[command]['whitelist']:
+                        self.perms[command]['whitelist'].insert(0, 'ALL')
+                else:
+                    whitelist_commands = self.perms.keys() if command == 'ALL' else [command]
+                    for command_promotion in whitelist_commands:
+                        if uid in self.perms[command_promotion]['blacklist']:
+                            self.perms[command_promotion]['blacklist'].remove(uid)
+                        if uid not in self.perms[command_promotion]['whitelist']:
+                            self.perms[command_promotion]['whitelist'].append(uid)
 
 
     async def literally_everything(self, event):
@@ -576,6 +719,8 @@ class CoopBoop:
                                           events.NewMessage(incoming=True))
             self.client.add_event_handler(self.exif, events.NewMessage(pattern=';exif'))
             self.client.add_event_handler(self.help, events.NewMessage(pattern=';help'))
+            self.client.add_event_handler(self.manage_permissions, \
+                                          events.NewMessage(pattern=';perman'))
             #self.client.add_event_handler(self.literally_everything)
             print("Events added")
 

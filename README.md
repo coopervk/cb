@@ -40,6 +40,7 @@ See a more in depth explanation of each function in the associated docstring
 8. ;dnd, do_not_disturb, Enable/disable/set message for do not disturb mode. Defaults to only 1 message per ID in 10 mins to prevent spam
 9. ;exif, exif, Get(data)/remove(clean) the exif data from a provided JPEG/.jpg image
 10. ;help, help, Respond to user with list of commands or help for specified command (docstring)
+11. ;perman, manage_permissions, manage or print the permissions for commands for the userbot
 
 ### Customization
 
