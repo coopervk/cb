@@ -548,7 +548,18 @@ class CoopBoop:
 
     @perm
     async def manage_permissions(self, event):
-        """
+        """ Modify or print the permissions for bot commands
+        -Format: ;perman p (command/uid)
+                 ;perman (-/+) (command/ALL) (uid/ALL)
+
+        -Ex:  ;perman p
+              ;perman p idof
+              ;perman p 123456789
+
+              ;perman - 123456789 src
+              ;perman + 123456789 idof
+              ;perman + ALL help
+              ;perman - src ALL
         """
         # pylint: disable=too-many-locals
         # pylint: disable=too-many-return-statements
