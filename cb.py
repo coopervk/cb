@@ -575,9 +575,17 @@ class CoopBoop:
             if len(cmd) == 2:
                 for command in self.perms.keys():
                     accum_str += f"**{command}**\n"
-                    whitelist = ', '.join(str(x) for x in self.perms[command]['whitelist'])
+                    whitelist = []
+                    for uid in self.perms[command]['whitelist']:
+                        user = await.self.client.get_entity(uid)
+                        whitelist.append(self.name(user) + f"({uid})")
+                    whitelist = ', '.join(whitelist)
                     accum_str += f"whitelist: {whitelist}\n"
-                    blacklist = ', '.join(str(x) for x in self.perms[command]['blacklist'])
+                    blacklist = []
+                    for uid in self.perms[command]['blacklist']:
+                        user = await.self.client.get_entity(uid)
+                        blacklist.append(self.name(user) + f"({uid})")
+                    blacklist = ', '.join(blacklist)
                     accum_str += f"blacklist: {blacklist}\n"
                     accum_str += '\n'
                 await self.fmt_reply(event, accum_str)
@@ -594,9 +602,17 @@ class CoopBoop:
                     command = cmd[2]
                     command = funcs[command].__name__
                     accum_str += f"**{command}**\n"
-                    whitelist = ', '.join(str(x) for x in self.perms[command]['whitelist'])
+                    whitelist = []
+                    for uid in self.perms[command]['whitelist']:
+                        user = await.self.client.get_entity(uid)
+                        whitelist.append(self.name(user) + f"({uid})")
+                    whitelist = ', '.join(whitelist)
                     accum_str += f"whitelist: {whitelist}\n"
-                    blacklist = ', '.join(str(x) for x in self.perms[command]['blacklist'])
+                    blacklist = []
+                    for uid in self.perms[command]['blacklist']:
+                        user = await.self.client.get_entity(uid)
+                        blacklist.append(self.name(user) + f"({uid})")
+                    blacklist = ', '.join(blacklist)
                     accum_str += f"blacklist: {blacklist}\n"
                 else:
                     await self.fmt_reply(event, "Invalid UID/command!")
