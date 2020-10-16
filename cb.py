@@ -540,19 +540,20 @@ class CoopBoop:
                 command = command[1:]
             if command not in mapping.keys():
                 await self.fmt_reply(event, f"Command {command} does not exist!")
-                return
             else:
                 await self.fmt_reply(event, f"{mapping[command].__doc__}")
-                return
         else:
             await self.fmt_reply(event, "Improper syntax for help!")
-            return
 
 
     @perm
     async def manage_permissions(self, event):
         """
         """
+        # pylint: disable=too-many-locals
+        # pylint: disable=too-many-return-statements
+        # pylint: disable=too-many-branches
+        # pylint: disable=too-many-statements
         cmd = event.message.raw_text.split(' ')
 
         if len(cmd) < 2 or len(cmd) > 4:
