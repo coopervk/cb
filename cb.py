@@ -606,8 +606,6 @@ class CoopBoop:
                 await self.fmt_reply(event, "Improper syntax for perman!")
                 return
         else:
-            # ;perman + uid command
-            # ;perman - uid command
             if not cmd[2].isdigit() and cmd[2] != 'ALL':
                 await self.fmt_reply(event, "Invalid UID!")
                 return
@@ -626,17 +624,24 @@ class CoopBoop:
             # case of switching back and forth between commands being available to the general
             # public and a group of trusted people
 
+            # ;perman + uid command
+            # ;perman - uid command
             if opt == '-':
-                # Blacklist UID(s)
-                # Special case: For ALL UID case, if wl contains ALL, just remove ALL
-                # Special case: For ALL UID case, if wl does not contain ALL, set whitelist to
-                # just owner of bot, but don't empty blacklist (don't want to lose state if temporary)
-                # Special case: Don't remove owner's permissions from anything
-                # Special case: Check if UID already in blacklist (don't have it twice)
-                # Remove from whitelist if whitelist is not ALL
-                # Add to blacklist if whitelist is ALL
-                pass
-
+                if uid == self.owner:
+                    await self.fmt_reply(event, "Cannot take permissions away from owner!")
+                    return
+                if uid == 'ALL':
+                    if 'ALL' in self.perms[command]['whitelist']:
+                        self.perms[command]['whitelist'].remove('ALL')
+                    else:
+                        self.perms[command]['whitelist'] = self.owner
+                else:
+                    blacklist_commands = [command] if command == 'ALL' else self.perms.keys()
+                    for command_demotion in blacklist_commands:
+                        if uid in self.perms[command_demotion]['whitelist']:
+                            self.perms[command_demotion]['whitelist'].remove(uid)
+                        if uid not in self.perms[command_demotion]['blacklist']:
+                            self.perms[command_demotion]['blacklist'].append(uid)
             if opt == '+':
                 # Whitelist UID(s)
                 # Special case: Check if UID already in whitelist (don't have it twice)
