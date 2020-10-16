@@ -614,7 +614,7 @@ class CoopBoop:
             if cmd[3] not in commands and cmd[3] != 'ALL':
                 await self.fmt_reply(event, "Invalid command!")
                 return
-            command = cmd[3]
+            command = funcs[cmd[3]].__name__ if cmd[3] != 'ALL' else 'ALL'
 
             if uid == 'ALL' and command == 'ALL':
                 await self.fmt_reply(event, "Cannot manage all permissions for all commands at once!")
@@ -636,7 +636,7 @@ class CoopBoop:
                     else:
                         self.perms[command]['whitelist'] = self.owner
                 else:
-                    blacklist_commands = self.perms.keys() if command == 'ALL' else [funcs[command].__name__]
+                    blacklist_commands = self.perms.keys() if command == 'ALL' else [command]
                     for command_demotion in blacklist_commands:
                         if uid in self.perms[command_demotion]['whitelist']:
                             self.perms[command_demotion]['whitelist'].remove(uid)
@@ -647,7 +647,8 @@ class CoopBoop:
                     if 'ALL' not in self.perms[command]['whitelist']:
                         self.perms[command]['whitelist'].insert(0, 'ALL')
                 else:
-                    whitelist_commands = self.perms.keys() if command == 'ALL' else [funcs[command].__name__]
+                    command = 'ALL' if command == 'ALL' else funcs[command].__name__
+                    whitelist_commands = self.perms.keys() if command == 'ALL' else [command]
                     for command_promotion in whitelist_commands:
                         if uid in self.perms[command_promotion]['blacklist']:
                             self.perms[command_promotion]['blacklist'].remove(uid)
