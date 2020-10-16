@@ -578,7 +578,7 @@ class CoopBoop:
                     whitelist = []
                     for uid in self.perms[command]['whitelist']:
                         if uid == 'ALL':
-                            whitelist.append[uid]
+                            whitelist.append(uid)
                         else:
                             user = await self.client.get_entity(uid)
                             whitelist.append(self.name(user) + f"({uid})")
@@ -608,7 +608,7 @@ class CoopBoop:
                     whitelist = []
                     for uid in self.perms[command]['whitelist']:
                         if uid == 'ALL':
-                            whitelist.append[uid]
+                            whitelist.append(uid)
                         else:
                             user = await self.client.get_entity(uid)
                             whitelist.append(self.name(user) + f"({uid})")
