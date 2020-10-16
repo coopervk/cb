@@ -636,7 +636,7 @@ class CoopBoop:
                     else:
                         self.perms[command]['whitelist'] = self.owner
                 else:
-                    blacklist_commands = self.perm.keys() if command == 'ALL' else [command]
+                    blacklist_commands = self.perms.keys() if command == 'ALL' else [command]
                     for command_demotion in blacklist_commands:
                         if uid in self.perms[command_demotion]['whitelist']:
                             self.perms[command_demotion]['whitelist'].remove(uid)
@@ -647,7 +647,7 @@ class CoopBoop:
                     if 'ALL' not in self.perms[command]['whitelist']:
                         self.perms[command]['whitelist'].insert(0, 'ALL')
                 else:
-                    whitelist_commands = self.perm.keys() if command == 'ALL' else [command]
+                    whitelist_commands = self.perms.keys() if command == 'ALL' else [command]
                     for command_promotion in whitelist_commands:
                         if uid in self.perms[command_promotion]['blacklist']:
                             self.perms[command_promotion]['blacklist'].remove(uid)
