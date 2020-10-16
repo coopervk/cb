@@ -647,7 +647,6 @@ class CoopBoop:
                     if 'ALL' not in self.perms[command]['whitelist']:
                         self.perms[command]['whitelist'].insert(0, 'ALL')
                 else:
-                    command = 'ALL' if command == 'ALL' else funcs[command].__name__
                     whitelist_commands = self.perms.keys() if command == 'ALL' else [command]
                     for command_promotion in whitelist_commands:
                         if uid in self.perms[command_promotion]['blacklist']:
