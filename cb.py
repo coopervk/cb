@@ -643,11 +643,16 @@ class CoopBoop:
                         if uid not in self.perms[command_demotion]['blacklist']:
                             self.perms[command_demotion]['blacklist'].append(uid)
             if opt == '+':
-                # Whitelist UID(s)
-                # Special case: Check if UID already in whitelist (don't have it twice)
-                # Remove from blacklist if present
-                # Add to whitelist
-                pass
+                if uid == 'ALL':
+                    if 'ALL' not in self.perms[command]['whitelist']:
+                        self.perms[command]['whitelist'].insert(0, 'ALL')
+                else:
+                    whitelist_commands = self.perm.keys() if command == 'ALL' else [command]
+                    for command_promotion in whitelist_commands:
+                        if uid in self.perms[command_demotion]['blacklist']:
+                            self.perms[command_demotion]['blacklist'].remove(uid)
+                        if uid not in self.perms[command_demotion]['whitelist']:
+                            self.perms[command_demotion]['whitelist'].append(uid)
 
 
     async def literally_everything(self, event):
