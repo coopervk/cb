@@ -30,7 +30,8 @@ class CoopBoop:
         self.path = os.path.realpath(__file__)
 
         # Load from config file
-        with open("config.json", "r") as config_file:
+        self.config_path = os.path.join(self.path, "config.json")
+        with open(self.config_path, "r") as config_file:
             config = json.load(config_file)
 
         # Permissions
@@ -187,11 +188,14 @@ class CoopBoop:
         return mapping
 
 
-    def save_config(self, path="config.json"):
+    def save_config(self, path=None):
         """ Save the current state of the bot to the config file
         -Take extra care as to where you call this.
         -Don't hand it off to user input EVER: arbitrary file overwrite
         """
+        if path is None:
+            path = self.config_path
+
         config = {}
 
         config['owner'] = self.owner
