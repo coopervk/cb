@@ -26,8 +26,12 @@ class CoopBoop:
     # pylint: disable=no-self-use
 
     def __init__(self):
+        # Path of script
+        self.path = os.path.dirname(os.path.realpath(__file__))
+
         # Load from config file
-        with open("config.json", "r") as config_file:
+        self.config_path = os.path.join(self.path, "config.json")
+        with open(self.config_path, "r") as config_file:
             config = json.load(config_file)
 
         # Permissions
@@ -41,10 +45,11 @@ class CoopBoop:
         self.header = config['header']
 
         # Set file to log bot activity to
-        self.bot_log_file = open("./bot_log.txt", 'a')
+        log_path = os.path.join(self.path, "bot_log.txt")
+        self.log_file = open(log_path, 'a')
 
         # File download location
-        self.file_download_path = "./tmp/"
+        self.file_download_path = os.path.join(self.path, "./tmp/")
 
         # Set do not disturb to off by default
         self.dnd = False
@@ -106,10 +111,10 @@ class CoopBoop:
 
 
     def bot_log(self, log):
-        """ Log the string log into the file self.bot_log_file, by default ./bot_log.txt
+        """ Log the string log into the file self.log_file, by default ./bot_log.txt
         """
-        self.bot_log_file.write(self.datetime_to_str(datetime.now()) + " --> " + log + '\n')
-        self.bot_log_file.flush()
+        self.log_file.write(self.datetime_to_str(datetime.now()) + " --> " + log + '\n')
+        self.log_file.flush()
 
 
     def str_to_datetime(self, time):
@@ -184,11 +189,14 @@ class CoopBoop:
         return mapping
 
 
-    def save_config(self, path="config.json"):
+    def save_config(self, path=None):
         """ Save the current state of the bot to the config file
         -Take extra care as to where you call this.
         -Don't hand it off to user input EVER: arbitrary file overwrite
         """
+        if path is None:
+            path = self.config_path
+
         config = {}
 
         config['owner'] = self.owner
@@ -196,7 +204,7 @@ class CoopBoop:
         config['header'] = self.header or "None"
         config['dnd_msg'] = self.dnd_msg or "None"
         config['dnd_pic'] = self.dnd_pic or "None"
-        config['api_id'] = self.api_id 
+        config['api_id'] = self.api_id
         config['api_hash'] = self.api_hash
         config['owner_name'] = self.owner_name
 
@@ -232,7 +240,7 @@ class CoopBoop:
         """
         self.save_config()
         self.bot_log("Shutting down")
-        self.bot_log_file.close()
+        self.log_file.close()
         await event.client.disconnect()
 
 
