@@ -27,7 +27,7 @@ class CoopBoop:
 
     def __init__(self):
         # Path of script
-        self.path = os.path.realpath(__file__)
+        self.path = os.path.join(os.path.realpath(__file__), "..")
 
         # Load from config file
         self.config_path = os.path.join(self.path, "config.json")
