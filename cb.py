@@ -45,7 +45,8 @@ class CoopBoop:
         self.header = config['header']
 
         # Set file to log bot activity to
-        self.bot_log_file = open("./bot_log.txt", 'a')
+        log_path = os.path.join(self.path, "bot_log.txt")
+        self.log_file = open(log_path, 'a')
 
         # File download location
         self.file_download_path = "./tmp/"
@@ -112,8 +113,8 @@ class CoopBoop:
     def bot_log(self, log):
         """ Log the string log into the file self.bot_log_file, by default ./bot_log.txt
         """
-        self.bot_log_file.write(self.datetime_to_str(datetime.now()) + " --> " + log + '\n')
-        self.bot_log_file.flush()
+        self.log_file.write(self.datetime_to_str(datetime.now()) + " --> " + log + '\n')
+        self.log_file.flush()
 
 
     def str_to_datetime(self, time):
