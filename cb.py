@@ -111,7 +111,7 @@ class CoopBoop:
 
 
     def bot_log(self, log):
-        """ Log the string log into the file self.bot_log_file, by default ./bot_log.txt
+        """ Log the string log into the file self.log_file, by default ./bot_log.txt
         """
         self.log_file.write(self.datetime_to_str(datetime.now()) + " --> " + log + '\n')
         self.log_file.flush()
@@ -240,7 +240,7 @@ class CoopBoop:
         """
         self.save_config()
         self.bot_log("Shutting down")
-        self.bot_log_file.close()
+        self.log_file.close()
         await event.client.disconnect()
 
 
