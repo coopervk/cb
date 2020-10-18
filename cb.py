@@ -26,6 +26,9 @@ class CoopBoop:
     # pylint: disable=no-self-use
 
     def __init__(self):
+        # Path of script
+        self.path = os.path.realpath(__file__)
+
         # Load from config file
         with open("config.json", "r") as config_file:
             config = json.load(config_file)
