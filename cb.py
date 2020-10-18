@@ -49,7 +49,7 @@ class CoopBoop:
         self.log_file = open(log_path, 'a')
 
         # File download location
-        self.file_download_path = "./tmp/"
+        self.file_download_path = os.path.join(self.path, "./tmp/")
 
         # Set do not disturb to off by default
         self.dnd = False
