@@ -204,7 +204,7 @@ class CoopBoop:
         config['header'] = self.header or "None"
         config['dnd_msg'] = self.dnd_msg or "None"
         config['dnd_pic'] = self.dnd_pic or "None"
-        config['api_id'] = self.api_id 
+        config['api_id'] = self.api_id
         config['api_hash'] = self.api_hash
         config['owner_name'] = self.owner_name
 
