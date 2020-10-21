@@ -4,7 +4,7 @@
 Telethon based Telegram userbot
 
 ## Get it running
-1. Install the Telethon and exif libraries `pip install telethon exif`
+1. Install the dependencies: `pip3 install -r requirements.txt`
 2. Create a Telegram App at https://my.telegram.org/apps
 3. Save the API_id and API_hash to their associated fields in config.json
 4. Launch bot with `python cb.py` on Linux or `py cb.py` on Windows
@@ -13,7 +13,7 @@ Telethon based Telegram userbot
 7. Create an empty "Control" group in Telegram
 8. Send `;idof USERNAME` with your username (@)
 9. Paste the number into the owner field of creds.json
-10. Stop the bot by sending ";sid"
+10. Stop the bot by sending `;sid`
 11. Set the whitelist of "id_of" to "OWNER" in config.json
 
 ## Bot features
