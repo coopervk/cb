@@ -13,7 +13,7 @@ Telethon based Telegram userbot
 7. Create an empty "Control" group in Telegram
 8. Send `;idof USERNAME` with your username (@)
 9. Paste the number into the owner field of creds.json
-10. Stop the bot by sending ";sid"
+10. Stop the bot by sending `;sid`
 11. Set the whitelist of "id_of" to "OWNER" in config.json
 
 ## Bot features
