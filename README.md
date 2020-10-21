@@ -4,7 +4,7 @@
 Telethon based Telegram userbot
 
 ## Get it running
-1. Install the Telethon and exif libraries `pip install telethon exif`
+1. Install the dependencies: `pip3 install -r requirements.txt`
 2. Create a Telegram App at https://my.telegram.org/apps
 3. Save the API_id and API_hash to their associated fields in config.json
 4. Launch bot with `python cb.py` on Linux or `py cb.py` on Windows
