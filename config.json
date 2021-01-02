@@ -1,8 +1,8 @@
 {
-  "owner_name": 0,
-  "owner": 0,
-  "api_id": 0,
-  "api_hash": 0,
+  "owner_name": "",
+  "owner": "",
+  "api_id": "",
+  "api_hash": "",
   "perms": {
     "set_header": {
       "whitelist": [ "OWNER" ],
@@ -21,7 +21,7 @@
       "blacklist": []
     },
     "id_of": {
-      "whitelist": [ "OWNER" ],
+      "whitelist": [ "ALL" ],
       "blacklist": []
     },
     "name_of": {
