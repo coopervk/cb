@@ -13,8 +13,8 @@ Telethon based Telegram userbot
 7. Provide the code once it arrives
 8. Create an empty "Control" group in Telegram
 9. Send `;idof USERNAME` with your username (@)
-10. Paste the number into the owner field of creds.json
-11. Stop the bot by sending `;sid`
+10. Stop the bot by sending `;sid`
+11. Paste the number into the owner field of creds.json
 12. Set the whitelist of "id_of" and "shutdown_switch" to "OWNER" in config.json
 13. Start the bot again persistently using your preferred method (tmux, screen, cron, job scheduler, etc)
 
