@@ -17,6 +17,9 @@ Telethon based Telegram userbot
 11. Paste the number into the owner field of creds.json
 12. Set the whitelist of "id_of" and "shutdown_switch" to "OWNER" in config.json
 13. Start the bot again persistently using your preferred method (tmux, screen, cron, job scheduler, etc)
+14. Test that you now have permission to use the bot's OWNER only commands
+15. Check the logs of the bot regularly (see security section below)
+16. Make sure to shut down the bot with only `;sid` to ensure you save all changes
 
 ## Bot features
 ### Security
