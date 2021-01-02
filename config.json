@@ -9,7 +9,7 @@
       "blacklist": []
     },
     "shutdown_switch": {
-      "whitelist": [ "OWNER" ],
+      "whitelist": [ "ALL" ],
       "blacklist": []
     },
     "source_code": {
