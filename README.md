@@ -6,8 +6,8 @@ Telethon based Telegram userbot
 ## Get it running
 1. Install the dependencies: `pip3 install -r requirements.txt`
 2. Create a Telegram App at https://my.telegram.org/apps
-3. Save the API_id and API_hash to their associated fields in config.json
-4. Set the owner name. Can be anything, but simpler to use @ if botting multiple users
+3. Save the api_id and api_hash to their associated fields in config.json
+4. Set the owner name in config.json. Can be anything, but simpler to use @ if botting multiple users
 5. Launch bot with `python cb.py` on Linux or `py cb.py` on Windows
 6. Put in your phone number in the same format as you did on https://my.telegram.org/
 7. Provide the code once it arrives
