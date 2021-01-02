@@ -37,9 +37,10 @@ class CoopBoop:
         # Permissions
         self.owner = config['owner']
         self.perms = config['perms']
-        for command in self.perms:
-            if self.perms[command]['whitelist'] == ["OWNER"]:
-                self.perms[command]['whitelist'] = [self.owner]
+        if self.owner:
+            for command in self.perms:
+                if self.perms[command]['whitelist'] == ["OWNER"]:
+                    self.perms[command]['whitelist'] = [self.owner]
 
         # Default message reply header
         self.header = config['header']
